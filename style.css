@@ -1611,6 +1611,14 @@ footer.site-footer {
     line-height: 1;
 }
 
+.footer-brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: fit-content;
+}
+
 .footer-brand p {
     max-width: 280px;
     margin: 0 0 22px;
