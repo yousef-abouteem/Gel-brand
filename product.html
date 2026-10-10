@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <title>GEL Brand | Product</title>
+</head>
+<body>
+    <!-- Header Section -->
+    <div class="announcement" data-i18n="announce">شحن دولي من قطر | اطلب مباشرة عبر واتساب</div>
+
+    <header class="site-header">
+        <button type="button" class="nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="nav-links">
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <nav class="nav-links" id="nav-links" aria-label="Main">
+            <a href="index.html" data-i18n="nav_home">الرئيسية</a>
+            <a href="shop.html" class="active" aria-current="page" data-i18n="nav_shop">المتجر</a>
+            <a href="about.html" data-i18n="nav_about">من نحن</a>
+            <a href="contact.html" data-i18n="nav_contact">تواصل معنا</a>
+        </nav>
+
+        <a href="index.html" class="logo-container">
+            <img src="IMG/owl.png" alt="GEL" class="logo-img">
+            <span class="logo">GEL</span>
+        </a>
+
+        <div class="nav-actions">
+            <button type="button" class="lang-btn" onclick="setLanguage(currentLang === 'ar' ? 'en' : 'ar')">
+                <span id="current-lang-label" lang="en">EN</span>
+            </button>
+            <button type="button" class="cart-icon" onclick="toggleCart()">
+                <i class="fas fa-shopping-bag" aria-hidden="true"></i>
+                <span class="sr-only" data-i18n="nav_bag">الحقيبة</span>
+                <span id="cart-count"></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Shopping Cart Sidebar -->
+    <div id="cart-sidebar" class="cart-sidebar">
+        <div class="cart-header">
+            <h3 data-i18n="cart_title">حقيبتك</h3>
+            <i class="fas fa-times close-cart" onclick="toggleCart()"></i>
+        </div>
+        <div id="cart-items" class="cart-items">
+            <p class="empty-msg" data-i18n="cart_empty">حقيبتك فارغة</p>
+        </div>
+        <div class="cart-footer">
+            <div class="total">
+                <span data-i18n="cart_total">الإجمالي</span>:
+                <span id="cart-total">0 QAR</span>
+            </div>
+            <button class="checkout-btn" onclick="checkout()" data-i18n="cart_checkout">إتمام الطلب</button>
+        </div>
+    </div>
+
+    <main id="product-page" class="product-page">
+        <div class="pp-topbar">
+            <a href="shop.html" class="pp-back" id="pp-back">
+                <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                <span data-i18n="pp_back">رجوع</span>
+            </a>
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+            <a href="index.html" data-i18n="nav_home">الرئيسية</a>
+            <span aria-hidden="true">/</span>
+            <a href="shop.html" data-i18n="nav_shop">المتجر</a>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page" id="pp-crumb"></span>
+        </nav>
+        </div>
+
+        <div class="pp-layout">
+            <div class="pp-gallery">
+                <div class="pp-main" id="pp-main" tabindex="0" aria-label="Photos"></div>
+                <div class="pp-thumbs" id="pp-thumbs"></div>
+            </div>
+
+            <div class="pp-info">
+                <h1 id="pp-name"></h1>
+                <p class="pp-price" id="pp-price"></p>
+                <p class="pp-desc" id="pp-desc"></p>
+
+                <div class="pp-sizes-head">
+                    <span class="size-label" data-i18n="size_choose">اختر المقاس</span>
+                    <span class="pp-size-hint" id="pp-size-hint" role="alert"></span>
+                </div>
+                <div class="size-options" id="pp-sizes"></div>
+
+                <button type="button" class="pp-add" id="pp-add" data-i18n="add_to_cart">أضف للسلة</button>
+
+                <ul class="pp-details">
+                    <li><span data-i18n="pp_material">الخامة</span><span id="pp-material"></span></li>
+                    <li><span data-i18n="pp_fit">القصة</span><span id="pp-fit"></span></li>
+                    <li><span data-i18n="pp_shipping">الشحن</span><span data-i18n="pp_shipping_val">من قطر لكل الدول، والطلب عبر واتساب</span></li>
+                </ul>
+            </div>
+        </div>
+
+        <section class="pp-related">
+            <h2 data-i18n="pp_related">قد يعجبك أيضًا</h2>
+            <div class="gallery pp-related-grid" id="pp-related"></div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <a href="index.html" class="footer-logo" aria-label="GEL">
+                    <img src="IMG/footer-owl.png" alt="" class="footer-logo-img">
+                    <span>GEL</span>
+                </a>
+                <p data-i18n="footer_desc">ملابس فاخرة للجيل العصري.</p>
+                <ul class="footer-social">
+                    <li><a href="https://www.instagram.com/gelvogue.qa/" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram" aria-hidden="true"></i></a></li>
+                    <li><a href="https://www.tiktok.com/@gelvogue?_r=1&amp;_t=ZS-955QQ4w1Pfh" target="_blank" rel="noopener" aria-label="TikTok"><i class="fab fa-tiktok" aria-hidden="true"></i></a></li>
+                    <li><a href="https://wa.me/97431121124" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fab fa-whatsapp" aria-hidden="true"></i></a></li>
+                </ul>
+            </div>
+
+            <nav class="footer-col" aria-labelledby="footer-shop-title">
+                <h4 id="footer-shop-title" data-i18n="footer_shop">المتجر</h4>
+                <ul>
+                    <li><a href="shop.html" data-i18n="filter_all">الكل</a></li>
+                    <li><a href="shop.html#tees" data-i18n="filter_tees">تيشيرتات</a></li>
+                    <li><a href="shop.html#hoodies" data-i18n="filter_hoodies">هوديز</a></li>
+                    <li><a href="shop.html#jackets" data-i18n="filter_jackets">جاكيتات</a></li>
+                    <li><a href="shop.html#accessories" data-i18n="filter_accessories">إكسسوارات</a></li>
+                </ul>
+            </nav>
+
+            <nav class="footer-col" aria-labelledby="footer-info-title">
+                <h4 id="footer-info-title" data-i18n="footer_info">عن GEL</h4>
+                <ul>
+                    <li><a href="index.html" data-i18n="nav_home">الرئيسية</a></li>
+                    <li><a href="about.html" data-i18n="nav_about">من نحن</a></li>
+                    <li><a href="contact.html" data-i18n="nav_contact">تواصل معنا</a></li>
+                </ul>
+            </nav>
+
+            <div class="footer-col">
+                <h4 data-i18n="footer_contact">تواصل</h4>
+                <ul>
+                    <li><a href="https://wa.me/97431121124" target="_blank" rel="noopener"><i class="fab fa-whatsapp" aria-hidden="true"></i> <bdi dir="ltr">+974 3112 1124</bdi></a></li>
+                    <li><a href="mailto:gelvoguee@gmail.com"><i class="far fa-envelope" aria-hidden="true"></i> <bdi dir="ltr">gelvoguee@gmail.com</bdi></a></li>
+                    <li><span><i class="fas fa-location-dot" aria-hidden="true"></i> <span data-i18n="footer_location">قطر · شحن دولي</span></span></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p data-i18n="footer_rights">جميع الحقوق محفوظة © 2026 براند GEL.</p>
+            <p class="footer-motto" lang="en">WEAR WONDER</p>
+        </div>
+    </footer>
+
+    <!-- AI Chat Widget -->
+    <link rel="stylesheet" href="ai-chat.css">
+    <div id="ai-chat-container"></div>
+    <script src="ai-chat.js"></script>
+    <script>
+        fetch('ai-chat.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('ai-chat-container').innerHTML = data;
+                if (typeof setLanguage === 'function') {
+                    setLanguage(currentLang);
+                }
+            });
+    </script>
+
+    <script src="products.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
