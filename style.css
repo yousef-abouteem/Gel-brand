@@ -1728,6 +1728,6 @@ footer.site-footer .footer-bottom {
 }
 
 /* Keep the chat button visible on top of the dark footer */
-.ai-chat-btn {
+#ai-chat-btn.ai-chat-btn {
     box-shadow: 0 0 0 3px #ffffff, 0 10px 30px rgba(44, 59, 48, 0.3);
 }
