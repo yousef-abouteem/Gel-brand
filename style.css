@@ -1814,3 +1814,253 @@ footer.site-footer .footer-bottom {
     border-radius: 3px;
     background: var(--primary-color);
 }
+
+/* Product cards link to their page */
+.product-media.is-link {
+    cursor: pointer;
+}
+
+.product-link {
+    color: inherit;
+    text-decoration: none;
+}
+
+.product-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+/* ==========================================
+   Product page
+   ========================================== */
+.product-page {
+    padding: 32px 8% 80px;
+}
+
+.product-page .breadcrumb {
+    margin-bottom: 24px;
+}
+
+.pp-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    gap: 56px;
+    align-items: start;
+}
+
+.pp-gallery {
+    position: relative;
+}
+
+.pp-main {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    border-radius: 12px;
+    background: #d6d6d4;
+    outline-offset: 4px;
+}
+
+.pp-main::-webkit-scrollbar {
+    display: none;
+}
+
+.pp-main img {
+    flex: 0 0 100%;
+    width: 100%;
+    aspect-ratio: 848 / 1264;
+    object-fit: cover;
+    scroll-snap-align: center;
+    display: block;
+}
+
+.pp-dots {
+    position: static;
+    margin-top: 14px;
+    display: none;
+}
+
+.pp-thumbs {
+    display: flex;
+    gap: 12px;
+    margin-top: 14px;
+}
+
+.pp-thumb {
+    width: 84px;
+    padding: 0;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    background: #d6d6d4;
+    overflow: hidden;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.2s ease, border-color 0.2s ease;
+}
+
+.pp-thumb img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 848 / 1264;
+    object-fit: cover;
+}
+
+.pp-thumb:hover,
+.pp-thumb.is-active {
+    opacity: 1;
+}
+
+.pp-thumb.is-active {
+    border-color: var(--primary-color);
+}
+
+.pp-info {
+    position: sticky;
+    top: 110px;
+}
+
+.pp-info h1 {
+    font-size: clamp(24px, 2.6vw, 34px);
+    font-weight: 700;
+    color: var(--primary-color);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.pp-price {
+    font-size: 20px;
+    color: var(--text-color);
+    margin-bottom: 22px;
+}
+
+.pp-desc {
+    font-size: 15px;
+    line-height: 1.9;
+    color: var(--text-muted);
+    margin-bottom: 30px;
+    max-width: 480px;
+}
+
+.pp-sizes-head {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+}
+
+.pp-size-hint {
+    font-size: 13px;
+    color: #b3261e;
+}
+
+.pp-add {
+    width: 100%;
+    max-width: 480px;
+    padding: 17px;
+    border: 0;
+    border-radius: 8px;
+    background: var(--primary-color);
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.pp-add:hover {
+    background: var(--primary-light);
+}
+
+.pp-add.success {
+    background: #2ecc71;
+}
+
+.pp-details {
+    list-style: none;
+    margin: 32px 0 0;
+    padding: 0;
+    max-width: 480px;
+    border-top: 1px solid #ececec;
+}
+
+.pp-details li {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid #ececec;
+    font-size: 14px;
+}
+
+.pp-details li span:first-child {
+    color: var(--text-muted);
+}
+
+.pp-details li span:last-child {
+    color: var(--text-color);
+    text-align: end;
+}
+
+.pp-related {
+    margin-top: 90px;
+}
+
+.pp-related h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 4px;
+}
+
+.pp-related .gallery {
+    padding: 24px 0 0;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+}
+
+.pp-related .gallery img {
+    height: 340px;
+}
+
+@media (max-width: 860px) {
+    .product-page {
+        padding: 20px 0 60px;
+    }
+
+    .product-page .breadcrumb,
+    .pp-info,
+    .pp-related {
+        padding: 0 20px;
+    }
+
+    .pp-layout {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    .pp-main {
+        border-radius: 0;
+    }
+
+    /* A little shorter on phones so the name and price show sooner */
+    .pp-main img {
+        aspect-ratio: 4 / 5;
+    }
+
+    .pp-thumbs {
+        display: none;
+    }
+
+    .pp-dots {
+        display: flex;
+    }
+
+    .pp-info {
+        position: static;
+    }
+
+    .pp-related {
+        margin-top: 60px;
+    }
+}

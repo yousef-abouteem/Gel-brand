@@ -56,6 +56,13 @@ const translations = {
         close: "إغلاق",
         order_greeting: "مرحباً GEL Brand، أرغب بطلب الآتي:",
         currency: "ر.ق",
+        pp_material: "الخامة",
+        pp_fit: "القصة",
+        pp_shipping: "الشحن",
+        pp_shipping_val: "من قطر لكل الدول، والطلب عبر واتساب",
+        pp_related: "قد يعجبك أيضًا",
+        pp_pick_size: "اختر مقاسك أولًا",
+        pp_view: "عرض المنتج",
         lang_btn: "English",
         ai_name: "مساعد GEL",
         ai_online: "متصل",
@@ -118,6 +125,13 @@ const translations = {
         close: "Close",
         order_greeting: "Hello GEL Brand, I would like to order:",
         currency: "QAR",
+        pp_material: "Material",
+        pp_fit: "Fit",
+        pp_shipping: "Shipping",
+        pp_shipping_val: "Ships worldwide from Qatar, order via WhatsApp",
+        pp_related: "You may also like",
+        pp_pick_size: "Please choose a size first",
+        pp_view: "View product",
         lang_btn: "العربية",
         ai_name: "GEL Assistant",
         ai_online: "Online",
@@ -166,6 +180,7 @@ function setLanguage(lang) {
 
     updateCartUI(); // Refresh cart text
     if (window.updateShopCount) window.updateShopCount();
+    if (window.renderProductText) window.renderProductText();
 }
 
 // 1. وظيفة تشغيل الحركات عند تحميل الصفحة بالكامل
@@ -581,25 +596,150 @@ function checkout() {
     applyHash();
 })();
 
+// --- Product page (product.html?id=tee) ---
+(function setupProductPage() {
+    const page = document.getElementById('product-page');
+    if (!page || typeof findProduct !== 'function') return;
+
+    const product = findProduct(new URLSearchParams(location.search).get('id'));
+    if (!product) {
+        location.replace('shop.html');
+        return;
+    }
+
+    const $ = (id) => document.getElementById(id);
+    let selectedSize = product.sizes.length === 1 ? product.sizes[0] : null;
+
+    // Gallery: a swipeable strip of photos with thumbnails
+    const main = $('pp-main');
+    const thumbs = $('pp-thumbs');
+    product.images.forEach((src, i) => {
+        const img = document.createElement('img');
+        img.src = src;
+        img.alt = i === 0 ? product.name : '';
+        if (i > 0) img.loading = 'lazy';
+        main.appendChild(img);
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'pp-thumb' + (i === 0 ? ' is-active' : '');
+        btn.setAttribute('aria-label', String(i + 1));
+        btn.innerHTML = `<img src="${src}" alt="">`;
+        btn.addEventListener('click', () => {
+            main.scrollTo({ left: main.children[i].offsetLeft - main.offsetLeft, behavior: 'smooth' });
+        });
+        thumbs.appendChild(btn);
+    });
+
+    const dots = document.createElement('div');
+    dots.className = 'product-dots pp-dots';
+    product.images.forEach((_, i) => {
+        const d = document.createElement('span');
+        if (i === 0) d.className = 'is-active';
+        dots.appendChild(d);
+    });
+    main.after(dots);
+
+    const setActive = (i) => {
+        [...thumbs.children].forEach((t, k) => t.classList.toggle('is-active', k === i));
+        [...dots.children].forEach((d, k) => d.classList.toggle('is-active', k === i));
+    };
+    if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                if (e.isIntersecting) setActive([...main.children].indexOf(e.target));
+            });
+        }, { root: main, threshold: 0.6 });
+        [...main.children].forEach(img => io.observe(img));
+    }
+    main.addEventListener('keydown', (e) => {
+        if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+        e.preventDefault();
+        main.scrollBy({ left: (e.key === 'ArrowRight' ? 1 : -1) * main.clientWidth, behavior: 'smooth' });
+    });
+
+    // Sizes
+    const sizesEl = $('pp-sizes');
+    const hint = $('pp-size-hint');
+    function renderSizes() {
+        sizesEl.innerHTML = '';
+        product.sizes.forEach(size => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'size-option';
+            btn.textContent = sizeText(size);
+            btn.setAttribute('aria-pressed', String(size === selectedSize));
+            btn.addEventListener('click', () => {
+                selectedSize = size;
+                hint.textContent = '';
+                [...sizesEl.children].forEach(b => b.setAttribute('aria-pressed', String(b === btn)));
+            });
+            sizesEl.appendChild(btn);
+        });
+    }
+
+    // Add to bag
+    const addBtn = $('pp-add');
+    addBtn.addEventListener('click', () => {
+        const t = translations[currentLang];
+        if (!selectedSize) {
+            hint.textContent = t.pp_pick_size;
+            sizesEl.firstElementChild.focus();
+            return;
+        }
+        putInCart(product.name, product.price, product.images[0], selectedSize);
+        addBtn.textContent = t.added;
+        addBtn.classList.add('success');
+        setTimeout(() => {
+            addBtn.textContent = translations[currentLang].add_to_cart;
+            addBtn.classList.remove('success');
+        }, 1200);
+        const sidebar = document.getElementById('cart-sidebar');
+        if (sidebar && !sidebar.classList.contains('active')) toggleCart();
+    });
+
+    // Text that changes with the language
+    window.renderProductText = () => {
+        const lang = currentLang;
+        $('pp-crumb').textContent = product.name;
+        $('pp-name').textContent = product.name;
+        $('pp-price').textContent = `${product.price} QAR`;
+        $('pp-desc').textContent = product.desc[lang];
+        $('pp-material').textContent = product.material[lang];
+        $('pp-fit').textContent = product.fit[lang];
+        document.title = `${product.name} | GEL Brand`;
+        renderSizes();
+    };
+    window.renderProductText();
+
+    // Related products, as the same cards used in the shop
+    const related = $('pp-related');
+    GEL_PRODUCTS.filter(p => p.id !== product.id).forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'gallery-item';
+        card.innerHTML = `
+            <img src="${p.images[0]}" alt="${p.name}">
+            <div class="product-info">
+                <h3>${p.name}</h3>
+                <p class="price">${p.price} QAR</p>
+                <button class="add-to-cart" data-i18n="add_to_cart">${translations[currentLang].add_to_cart}</button>
+            </div>`;
+        card.querySelector('.add-to-cart').addEventListener('click', (e) => addToCart(p.name, p.price, p.images[0], e));
+        related.appendChild(card);
+    });
+})();
+
 // --- Product cards: cycle front / side / back views ---
 // Desktop: while the mouse is over the card. Phones: while the card is in view.
 (function setupProductViews() {
-    const VIEWS = {
-        'gel-tee.jpg':    ['gel-tee-side.jpg', 'gel-tee-back.jpg'],
-        'gel-hoodie.jpg': ['gel-hoodie-side.jpg', 'gel-hoodie-back.jpg'],
-        'gel-jacket.jpg': ['gel-jacket-side.jpg', 'gel-jacket-back.jpg'],
-        'gel-shorts.jpg': ['gel-shorts-side.jpg', 'gel-shorts-back.jpg'],
-        'gel-cap.jpg':    ['gel-cap-side.jpg', 'gel-cap-back.jpg'],
-    };
     const STEP_MS = 1100;
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
     document.querySelectorAll('.gallery-item > img').forEach(front => {
-        const file = front.getAttribute('src').split('/').pop();
-        const extras = VIEWS[file];
-        if (!extras) return;
-        const dir = front.getAttribute('src').slice(0, -file.length);
+        const product = typeof findProductByImage === 'function' ? findProductByImage(front.getAttribute('src')) : null;
+        if (!product) return;
+        const extras = product.images.slice(1);
 
         // Wrap the photo so the other views can sit on top of it
         const media = document.createElement('div');
@@ -611,7 +751,7 @@ function checkout() {
         const views = [front];
         extras.forEach(name => {
             const img = document.createElement('img');
-            img.src = dir + name;
+            img.src = name;
             img.alt = '';
             img.loading = 'lazy';
             img.decoding = 'async';
@@ -651,6 +791,20 @@ function checkout() {
         };
 
         const card = media.closest('.gallery-item');
+
+        // The photo and the name open the product page
+        const url = `product.html?id=${product.id}`;
+        const title = card.querySelector('h3');
+        if (title && !title.querySelector('a')) {
+            const link = document.createElement('a');
+            link.href = url;
+            link.className = 'product-link';
+            link.textContent = title.textContent;
+            title.textContent = '';
+            title.appendChild(link);
+        }
+        media.classList.add('is-link');
+        media.addEventListener('click', () => { location.href = url; });
         if (canHover) {
             card.addEventListener('mouseenter', start);
             card.addEventListener('mouseleave', stop);
