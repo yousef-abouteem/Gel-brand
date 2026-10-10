@@ -1,42 +1,16 @@
 /**
- * GEL AI Assistant - Logic & Gemini Integration
- * High-end style expert for clothing and eyewear.
+ * GEL AI Assistant - واجهة الشات بوت
+ * لا يوجد أي مفتاح هنا: المتصفح يرسل الرسالة إلى /api/chat، والخادم هو الذي يكلم Gemini
  */
 
-const GEMINI_API_KEY = "AIzaSyApnROYmXuV-suS08WDsqG_buzmObMDqYA"; // Insert your Gemini API Key here
-// استبدل السطر القديم بهذا السطر بالضبط
-const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`;
-// GEL Knowledge Base - Optimized for the Brand
-const GEL_INFO = `
-You are the GEL Brand Assistant, an expert in high-end fashion, luxury streetwear, and premium eyewear. 
-Your goal is to provide a sophisticated yet helpful experience for GEL customers.
+const CHAT_API = "/api/chat";
+const MAX_MESSAGE_LENGTH = 500;
 
-Brand Identity:
-- Name: GEL
-- Core Values: Luxury, modern comfort, exclusive designs, and lifestyle elevation.
-
-Products & Categories:
-- Best-Selling Items: GEL Signature Tee (120 QAR) and GEL Oversized Hoodie (250 QAR).
-- White Clothing: GEL Signature Tee is our premium white clothing option (120 QAR).
-- New Collection: The Urban Jacket (450 QAR) is the centerpiece of our latest collection.
-- Other Items: GEL Classic Cap (85 QAR), GEL Minimalist Shorts (110 QAR).
-
-Contact Information:
-- WhatsApp (Preferred): +974 3112 1124
-- Instagram: @gelvogue.qa
-- TikTok: @gelvogue
-- Email: gelvoguee@gmail.com
-- Location: Qatar, international shipping available.
-
-Operational Rules:
-- Language: Respond in the same language as the user (Arabic or English).
-- Conciseness: Keep answers elegant and brief (3-4 sentences).
-- Call to Action: Suggest contacting WhatsApp for orders or styling advice.
-`;
-
+// المحادثة الحالية، حتى يفهم المساعد الأسئلة المتتالية
+const chatHistory = [];
 let isTyping = false;
 
-window.toggleAIChat = function() {
+window.toggleAIChat = function () {
     const chatWindow = document.getElementById('ai-chat-window');
     if (chatWindow) {
         chatWindow.classList.toggle('active');
@@ -49,13 +23,25 @@ window.toggleAIChat = function() {
     }
 };
 
+// نحوّل الرموز الخاصة إلى نص عادي حتى لا يُنفَّذ أي HTML داخل الرسائل
+function escapeHTML(text) {
+    return text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
 function appendMessage(text, sender) {
     const chatMessages = document.getElementById('ai-chat-messages');
     if (!chatMessages) return;
 
     const msgDiv = document.createElement('div');
     msgDiv.classList.add('message', `${sender}-message`);
-    const formattedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    const formattedText = escapeHTML(text)
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\n/g, '<br>');
     msgDiv.innerHTML = `<p>${formattedText}</p>`;
     chatMessages.appendChild(msgDiv);
     chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
@@ -79,52 +65,54 @@ function removeTypingIndicator() {
     isTyping = false;
 }
 
-window.sendMessage = async function() {
+function errorMessage() {
+    const lang = document.documentElement.lang || 'en';
+    return lang === 'ar'
+        ? "عذراً، أواجه مشكلة في الاتصال. تواصل معنا على واتساب: +97431121124"
+        : "Sorry, I'm having trouble connecting. WhatsApp us: +97431121124";
+}
+
+window.sendMessage = async function () {
     const userInputField = document.getElementById('ai-user-input');
-    const userText = userInputField.value.trim();
+    if (!userInputField) return;
+    const userText = userInputField.value.trim().slice(0, MAX_MESSAGE_LENGTH);
     if (!userText || isTyping) return;
 
-    if (GEMINI_API_KEY.includes("AIzaSyApnROYmXuV-suS08WDsqG_buzmObMDqYA") || GEMINI_API_KEY === "") {
-        console.error("GEL AI: API Key is missing!");
-        appendMessage("System: Please insert your Gemini API Key in ai-chat.js.", 'ai');
-        return;
-    }
-
     appendMessage(userText, 'user');
+    chatHistory.push({ role: 'user', text: userText });
     userInputField.value = '';
     showTypingIndicator();
 
     try {
-        const combinedText = GEL_INFO + "\n\nUser: " + userText + "\n\nAssistant (respond in the same language):";
-        const response = await fetch(GEMINI_URL, {
+        const response = await fetch(CHAT_API, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                contents: [{ parts: [{ text: combinedText }] }],
-                generationConfig: { temperature: 0.7, topK: 40, topP: 0.95, maxOutputTokens: 1024 }
-            })
+            body: JSON.stringify({ history: chatHistory.slice(-10) })
         });
 
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.error?.message || `HTTP error! status: ${response.status}`);
-
-        if (data.candidates && data.candidates.length > 0) {
-            removeTypingIndicator();
-            appendMessage(data.candidates[0].content.parts[0].text, 'ai');
-        } else {
-            throw new Error("No response candidates returned.");
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok || !data.reply) {
+            throw new Error(data.error || `HTTP ${response.status}`);
         }
+
+        removeTypingIndicator();
+        appendMessage(data.reply, 'ai');
+        chatHistory.push({ role: 'model', text: data.reply.slice(0, MAX_MESSAGE_LENGTH) });
     } catch (error) {
         console.error("GEL AI Connection Error:", error);
         removeTypingIndicator();
-        const lang = document.documentElement.lang || 'en';
-        appendMessage(lang === 'ar' ? "عذراً، أواجه مشكلة في الاتصال. واتساب: +97431121124" : "Connection error. WhatsApp: +97431121124", 'ai');
+        // نحذف الرسالة الفاشلة من السجل حتى لا تتكرر رسالتان من الزائر متتاليتين
+        chatHistory.pop();
+        appendMessage(errorMessage(), 'ai');
     }
-}
+};
 
-document.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.isComposing) {
         const input = document.getElementById('ai-user-input');
-        if (input && document.activeElement === input) window.sendMessage();
+        if (input && document.activeElement === input) {
+            e.preventDefault();
+            window.sendMessage();
+        }
     }
 });
