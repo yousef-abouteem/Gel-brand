@@ -17,6 +17,10 @@ const translations = {
         cart_checkout: "إتمام الطلب",
         footer_desc: "ملابس فاخرة للجيل العصري.",
         footer_rights: "جميع الحقوق محفوظة © 2026 براند GEL.",
+        footer_shop: "المتجر",
+        footer_info: "عن GEL",
+        footer_contact: "تواصل",
+        footer_location: "قطر · شحن دولي",
         contact_title: "تواصل معنا",
         contact_desc: "نحن هنا لمساعدتك دائماً. يمكنك مراسلتنا عبر النموذج التالي:",
         contact_name: "الاسم",
@@ -32,8 +36,26 @@ const translations = {
         about_val2_desc: "قصات واسعة (Boxy fit)، خطوط نظيفة، وتطريز ناعم يبرز الفخامة بهدوء.",
         shop_title: "المجموعة الكاملة",
         shop_subtitle: "اكتشف أحدث تصاميمنا الحصرية",
+        filter_all: "الكل",
+        filter_tees: "تيشيرتات",
+        filter_hoodies: "هوديز",
+        filter_jackets: "جاكيتات",
+        filter_shorts: "شورتات",
+        filter_accessories: "إكسسوارات",
+        products_one: "منتج واحد",
+        products_two: "منتجان",
+        products_few: "{n} منتجات",
+        products_many: "{n} منتج",
         add_to_cart: "أضف للسلة",
         added: "تمت الإضافة!",
+        size_choose: "اختر المقاس",
+        size_one: "مقاس واحد",
+        size_label: "المقاس",
+        qty_label: "الكمية",
+        subtotal_label: "المجموع",
+        close: "إغلاق",
+        order_greeting: "مرحباً GEL Brand، أرغب بطلب الآتي:",
+        currency: "ر.ق",
         lang_btn: "English",
         ai_name: "مساعد GEL",
         ai_online: "متصل",
@@ -57,6 +79,10 @@ const translations = {
         cart_checkout: "Checkout",
         footer_desc: "Premium apparel for the modern generation.",
         footer_rights: "© 2026 GEL Brand. All rights reserved.",
+        footer_shop: "Shop",
+        footer_info: "GEL",
+        footer_contact: "Contact",
+        footer_location: "Qatar · Ships worldwide",
         contact_title: "Contact Us",
         contact_desc: "We are always here to help. You can message us via the form below:",
         contact_name: "Name",
@@ -72,8 +98,26 @@ const translations = {
         about_val2_desc: "Boxy fits, clean cuts, and subtle embroidered details that stand out silently.",
         shop_title: "Full Collection",
         shop_subtitle: "Discover our latest exclusive designs",
+        filter_all: "All",
+        filter_tees: "Tees",
+        filter_hoodies: "Hoodies",
+        filter_jackets: "Jackets",
+        filter_shorts: "Shorts",
+        filter_accessories: "Accessories",
+        products_one: "1 product",
+        products_two: "2 products",
+        products_few: "{n} products",
+        products_many: "{n} products",
         add_to_cart: "Add to Cart",
         added: "Added!",
+        size_choose: "Choose your size",
+        size_one: "One size",
+        size_label: "Size",
+        qty_label: "Qty",
+        subtotal_label: "Subtotal",
+        close: "Close",
+        order_greeting: "Hello GEL Brand, I would like to order:",
+        currency: "QAR",
         lang_btn: "العربية",
         ai_name: "GEL Assistant",
         ai_online: "Online",
@@ -121,6 +165,7 @@ function setLanguage(lang) {
     });
 
     updateCartUI(); // Refresh cart text
+    if (window.updateShopCount) window.updateShopCount();
 }
 
 // 1. وظيفة تشغيل الحركات عند تحميل الصفحة بالكامل
@@ -182,30 +227,144 @@ function toggleCart() {
     if (sidebar) sidebar.classList.toggle('active');
 }
 
+// Sizes offered per product. Anything not listed gets the standard clothing run.
+const CLOTHING_SIZES = ['S', 'M', 'L', 'XL', 'XXL'];
+const ONE_SIZE = 'ONE SIZE';
+function sizesFor(name) {
+    return /cap/i.test(name) ? [ONE_SIZE] : CLOTHING_SIZES;
+}
+
+function sizeText(size) {
+    return size === ONE_SIZE ? translations[currentLang].size_one : size;
+}
+
+// "Add to cart" on a product opens the size picker; the item goes in once a size is chosen.
 function addToCart(name, price, img, event) {
-    const existingItem = cart.find(item => item.name === name);
-    
+    openSizePicker({ name, price, img }, event ? event.currentTarget : null);
+}
+
+function putInCart(name, price, img, size) {
+    const existingItem = cart.find(item => item.name === name && item.size === size);
     if (existingItem) {
         existingItem.quantity += 1;
     } else {
-        const item = { name, price, img, quantity: 1, id: Date.now() };
-        cart.push(item);
+        cart.push({ name, price, img, size, quantity: 1, id: Date.now() });
     }
-    
     saveCart();
     updateCartUI();
-    
-    // Feedback feedback: turn button green
-    const btn = event ? event.currentTarget : null;
-    if (btn) {
-        const originalText = btn.innerText;
-        btn.innerText = translations[currentLang].added;
-        btn.classList.add('success');
-        setTimeout(() => {
-            btn.innerText = translations[currentLang].add_to_cart;
-            btn.classList.remove('success');
-        }, 300);
+}
+
+const sizePicker = (() => {
+    let overlay, product, selected, returnFocus;
+
+    function build() {
+        overlay = document.createElement('div');
+        overlay.className = 'size-overlay';
+        overlay.innerHTML = `
+            <div class="size-dialog" role="dialog" aria-modal="true" aria-labelledby="size-product-name">
+                <button type="button" class="size-close">&times;</button>
+                <div class="size-product">
+                    <img alt="">
+                    <div>
+                        <h4 id="size-product-name"></h4>
+                        <p class="size-product-price"></p>
+                    </div>
+                </div>
+                <span class="size-label"></span>
+                <div class="size-options"></div>
+                <button type="button" class="size-confirm"></button>
+            </div>`;
+        document.body.appendChild(overlay);
+
+        overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
+        overlay.querySelector('.size-close').addEventListener('click', close);
+        overlay.querySelector('.size-confirm').addEventListener('click', confirm);
+        document.addEventListener('keydown', (e) => {
+            if (!overlay.classList.contains('open')) return;
+            if (e.key === 'Escape') close();
+            if (e.key === 'Tab') trapFocus(e);
+        });
     }
+
+    function trapFocus(e) {
+        const items = [...overlay.querySelectorAll('button:not(:disabled)')];
+        const first = items[0], last = items[items.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+
+    function select(size) {
+        selected = size;
+        overlay.querySelectorAll('.size-option').forEach(btn => {
+            btn.setAttribute('aria-pressed', String(btn.dataset.size === size));
+        });
+        overlay.querySelector('.size-confirm').disabled = false;
+    }
+
+    function open(p, trigger) {
+        if (!overlay) build();
+        const t = translations[currentLang];
+        product = p;
+        selected = null;
+        returnFocus = trigger;
+
+        overlay.querySelector('.size-product img').src = p.img;
+        overlay.querySelector('#size-product-name').textContent = p.name;
+        overlay.querySelector('.size-product-price').textContent = `${p.price} QAR`;
+        overlay.querySelector('.size-label').textContent = t.size_choose;
+        overlay.querySelector('.size-close').setAttribute('aria-label', t.close);
+        const confirmBtn = overlay.querySelector('.size-confirm');
+        confirmBtn.textContent = t.add_to_cart;
+        confirmBtn.disabled = true;
+
+        const options = overlay.querySelector('.size-options');
+        options.innerHTML = '';
+        const sizes = sizesFor(p.name);
+        sizes.forEach(size => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'size-option';
+            btn.dataset.size = size;
+            btn.textContent = sizeText(size);
+            btn.setAttribute('aria-pressed', 'false');
+            btn.addEventListener('click', () => select(size));
+            options.appendChild(btn);
+        });
+        if (sizes.length === 1) select(sizes[0]);
+
+        overlay.classList.add('open');
+        document.body.style.overflow = 'hidden';
+        (sizes.length === 1 ? confirmBtn : options.firstElementChild).focus();
+    }
+
+    function close() {
+        overlay.classList.remove('open');
+        document.body.style.overflow = '';
+        if (returnFocus) returnFocus.focus();
+    }
+
+    function confirm() {
+        if (!selected) return;
+        putInCart(product.name, product.price, product.img, selected);
+        const trigger = returnFocus;
+        close();
+
+        // Brief "Added!" on the product's own button
+        if (trigger) {
+            trigger.textContent = translations[currentLang].added;
+            trigger.classList.add('success');
+            setTimeout(() => {
+                trigger.textContent = translations[currentLang].add_to_cart;
+                trigger.classList.remove('success');
+            }, 1200);
+        }
+    }
+
+    return { open };
+})();
+
+function openSizePicker(product, trigger) {
+    sizePicker.open(product, trigger);
 }
 
 function changeQuantity(id, delta) {
@@ -267,6 +426,7 @@ function updateCartUI() {
                 <img src="${item.img}" alt="${item.name}">
                 <div class="cart-item-info">
                     <h4>${item.name}</h4>
+                    ${item.size ? `<span class="cart-item-size">${translations[currentLang].size_label}: ${sizeText(item.size)}</span>` : ''}
                     <p>${item.price} QAR</p>
                     <div class="qty-controls">
                         <button class="qty-btn" onclick="changeQuantity(${item.id}, 1)">+</button>
@@ -288,12 +448,18 @@ function checkout() {
         return;
     }
     
-    let message = currentLang === 'ar' ? "مرحباً GEL Brand، أرغب بطلب الآتي:\n\n" : "Hello GEL Brand, I would like to order:\n\n";
+    const t = translations[currentLang];
+    let message = t.order_greeting + "\n\n";
     cart.forEach(item => {
-        message += `- ${item.name} | Qty: ${item.quantity} | Total: ${item.price * item.quantity} QAR\n`;
+        const parts = [item.name];
+        if (item.size) parts.push(`${t.size_label}: ${sizeText(item.size)}`);
+        parts.push(`${t.qty_label}: ${item.quantity}`);
+        parts.push(`${t.subtotal_label}: ${item.price * item.quantity} ${t.currency}`);
+        message += `- ${parts.join(' | ')}\n`;
     });
-    message += `\n${translations[currentLang].cart_total}: ${document.getElementById('cart-total').innerText}`;
-    
+    const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    message += `\n${t.cart_total}: ${total} ${t.currency}`;
+
     const whatsappUrl = `https://wa.me/97431121124?text=${encodeURIComponent(message)}`; 
     window.open(whatsappUrl, '_blank');
 }
@@ -323,7 +489,7 @@ function checkout() {
     });
 })();
 
-// --- Home hero: cross-fade between photos every 5 seconds ---
+// --- Home hero: cross-fade between photos every 3.5 seconds ---
 (function setupHeroSlider() {
     const slider = document.querySelector('.hero-slider');
     if (!slider) return;
@@ -346,7 +512,7 @@ function checkout() {
 
     function start() {
         if (reduceMotion || timer) return;
-        timer = setInterval(() => show(current + 1), 5000);
+        timer = setInterval(() => show(current + 1), 3500);
     }
 
     function stop() {
@@ -362,10 +528,55 @@ function checkout() {
         });
     });
 
-    // Pause while the visitor hovers or the tab is in the background
-    slider.addEventListener('mouseenter', stop);
-    slider.addEventListener('mouseleave', start);
+    // Pause only while the tab is in the background. (It used to pause on hover too,
+    // but the hero fills the screen, so the mouse is nearly always over it.)
     document.addEventListener('visibilitychange', () => (document.hidden ? stop() : start()));
 
     start();
+})();
+
+// --- Shop: category filter chips and product count ---
+(function setupShopFilters() {
+    const chips = document.querySelectorAll('.filter-chip');
+    const items = document.querySelectorAll('.shop-gallery .gallery-item');
+    const countEl = document.getElementById('shop-count');
+    if (!chips.length || !items.length) return;
+
+    function countLabel(n) {
+        const t = translations[currentLang];
+        const key = n === 1 ? 'products_one' : n === 2 ? 'products_two' : (n >= 3 && n <= 10) ? 'products_few' : 'products_many';
+        return t[key].replace('{n}', n);
+    }
+
+    function visibleCount() {
+        return [...items].filter(item => !item.hidden).length;
+    }
+
+    window.updateShopCount = () => {
+        if (countEl) countEl.textContent = countLabel(visibleCount());
+    };
+
+    chips.forEach(chip => {
+        chip.addEventListener('click', () => {
+            const filter = chip.dataset.filter;
+            chips.forEach(c => c.setAttribute('aria-pressed', String(c === chip)));
+            items.forEach(item => {
+                item.hidden = filter !== 'all' && item.dataset.category !== filter;
+            });
+            window.updateShopCount();
+        });
+    });
+
+    function applyHash() {
+        const wanted = location.hash.slice(1);
+        const chip = [...chips].find(c => c.dataset.filter === wanted);
+        if (chip) chip.click();
+    }
+    window.addEventListener('hashchange', () => {
+        applyHash();
+        document.querySelector('.shop-top')?.scrollIntoView({ behavior: 'smooth' });
+    });
+
+    window.updateShopCount();
+    applyHash();
 })();
