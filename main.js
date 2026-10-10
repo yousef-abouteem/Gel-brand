@@ -32,6 +32,16 @@ const translations = {
         about_val2_desc: "قصات واسعة (Boxy fit)، خطوط نظيفة، وتطريز ناعم يبرز الفخامة بهدوء.",
         shop_title: "المجموعة الكاملة",
         shop_subtitle: "اكتشف أحدث تصاميمنا الحصرية",
+        filter_all: "الكل",
+        filter_tees: "تيشيرتات",
+        filter_hoodies: "هوديز",
+        filter_jackets: "جاكيتات",
+        filter_shorts: "شورتات",
+        filter_accessories: "إكسسوارات",
+        products_one: "منتج واحد",
+        products_two: "منتجان",
+        products_few: "{n} منتجات",
+        products_many: "{n} منتج",
         add_to_cart: "أضف للسلة",
         added: "تمت الإضافة!",
         size_choose: "اختر المقاس",
@@ -80,6 +90,16 @@ const translations = {
         about_val2_desc: "Boxy fits, clean cuts, and subtle embroidered details that stand out silently.",
         shop_title: "Full Collection",
         shop_subtitle: "Discover our latest exclusive designs",
+        filter_all: "All",
+        filter_tees: "Tees",
+        filter_hoodies: "Hoodies",
+        filter_jackets: "Jackets",
+        filter_shorts: "Shorts",
+        filter_accessories: "Accessories",
+        products_one: "1 product",
+        products_two: "2 products",
+        products_few: "{n} products",
+        products_many: "{n} products",
         add_to_cart: "Add to Cart",
         added: "Added!",
         size_choose: "Choose your size",
@@ -137,6 +157,7 @@ function setLanguage(lang) {
     });
 
     updateCartUI(); // Refresh cart text
+    if (window.updateShopCount) window.updateShopCount();
 }
 
 // 1. وظيفة تشغيل الحركات عند تحميل الصفحة بالكامل
@@ -505,4 +526,39 @@ function checkout() {
     document.addEventListener('visibilitychange', () => (document.hidden ? stop() : start()));
 
     start();
+})();
+
+// --- Shop: category filter chips and product count ---
+(function setupShopFilters() {
+    const chips = document.querySelectorAll('.filter-chip');
+    const items = document.querySelectorAll('.shop-gallery .gallery-item');
+    const countEl = document.getElementById('shop-count');
+    if (!chips.length || !items.length) return;
+
+    function countLabel(n) {
+        const t = translations[currentLang];
+        const key = n === 1 ? 'products_one' : n === 2 ? 'products_two' : (n >= 3 && n <= 10) ? 'products_few' : 'products_many';
+        return t[key].replace('{n}', n);
+    }
+
+    function visibleCount() {
+        return [...items].filter(item => !item.hidden).length;
+    }
+
+    window.updateShopCount = () => {
+        if (countEl) countEl.textContent = countLabel(visibleCount());
+    };
+
+    chips.forEach(chip => {
+        chip.addEventListener('click', () => {
+            const filter = chip.dataset.filter;
+            chips.forEach(c => c.setAttribute('aria-pressed', String(c === chip)));
+            items.forEach(item => {
+                item.hidden = filter !== 'all' && item.dataset.category !== filter;
+            });
+            window.updateShopCount();
+        });
+    });
+
+    window.updateShopCount();
 })();
