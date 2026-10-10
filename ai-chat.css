@@ -238,3 +238,17 @@
         font-size: 22px;
     }
 }
+
+/* كل رسالة تأخذ اتجاه لغتها: الرد الإنجليزي يبدأ من اليسار حتى لو كان الموقع بالعربي */
+.message p {
+    unicode-bidi: plaintext;
+}
+
+/* إخفاء زر الشات عندما تكون السلة مفتوحة، حتى لا يغطي زر "إتمام الطلب" */
+.ai-chat-widget {
+    transition: opacity 0.3s ease;
+}
+body:has(.cart-sidebar.active) .ai-chat-widget {
+    opacity: 0;
+    pointer-events: none;
+}

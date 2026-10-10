@@ -41,7 +41,9 @@ function appendMessage(text, sender) {
     msgDiv.classList.add('message', `${sender}-message`);
     const formattedText = escapeHTML(text)
         .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-        .replace(/\n/g, '<br>');
+        .replace(/\n/g, '<br>')
+        // الأرقام مثل +974 3112 1124 تُعرض دائمًا من اليسار لليمين حتى لا تنقلب داخل النص العربي
+        .replace(/\+?\d[\d ]{6,}\d/g, '<bdi dir="ltr">$&</bdi>');
     msgDiv.innerHTML = `<p>${formattedText}</p>`;
     chatMessages.appendChild(msgDiv);
     chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
