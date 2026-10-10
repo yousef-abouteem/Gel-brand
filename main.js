@@ -63,6 +63,7 @@ const translations = {
         pp_related: "قد يعجبك أيضًا",
         pp_pick_size: "اختر مقاسك أولًا",
         pp_view: "عرض المنتج",
+        pp_back: "رجوع",
         lang_btn: "English",
         ai_name: "مساعد GEL",
         ai_online: "متصل",
@@ -132,6 +133,7 @@ const translations = {
         pp_related: "You may also like",
         pp_pick_size: "Please choose a size first",
         pp_view: "View product",
+        pp_back: "Back",
         lang_btn: "العربية",
         ai_name: "GEL Assistant",
         ai_online: "Online",
@@ -616,6 +618,17 @@ function checkout() {
 
     const $ = (id) => document.getElementById(id);
     let selectedSize = product.sizes.length === 1 ? product.sizes[0] : null;
+
+    // Back: return to wherever the visitor came from on this site, otherwise the shop
+    const back = $('pp-back');
+    back.addEventListener('click', (e) => {
+        let sameSite = false;
+        try { sameSite = document.referrer && new URL(document.referrer).origin === location.origin; } catch (_) {}
+        if (sameSite && history.length > 1) {
+            e.preventDefault();
+            history.back();
+        }
+    });
 
     // Gallery: a swipeable strip of photos with thumbnails
     const main = $('pp-main');
