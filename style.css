@@ -2064,3 +2064,39 @@ footer.site-footer .footer-bottom {
         margin-top: 60px;
     }
 }
+
+/* Desktop gallery: thumbnails in a column beside a photo that fits the screen */
+@media (min-width: 861px) {
+    .pp-gallery {
+        --pp-h: clamp(420px, calc(100vh - 220px), 760px);
+        display: flex;
+        gap: 14px;
+        justify-content: center;
+    }
+
+    .pp-main {
+        height: var(--pp-h);
+        aspect-ratio: 848 / 1264;
+        flex: 0 0 auto;
+        order: 2;
+    }
+
+    .pp-main img {
+        height: 100%;
+        aspect-ratio: auto;
+    }
+
+    .pp-thumbs {
+        flex-direction: column;
+        margin-top: 0;
+        order: 1;
+    }
+
+    .pp-thumb {
+        width: 72px;
+    }
+
+    .pp-layout {
+        grid-template-columns: auto minmax(0, 1fr);
+    }
+}
