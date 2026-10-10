@@ -6,6 +6,8 @@ const translations = {
         nav_contact: "تواصل معنا",
         nav_about: "من نحن",
         nav_shop: "المتجر",
+        nav_bag: "الحقيبة",
+        announce: "شحن دولي من قطر | اطلب مباشرة عبر واتساب",
         hero_title: "GEL BRAND",
         hero_desc: "نحن لا نبيع الملابس فقط، نحن نصنع أسلوب حياة يجمع بين الفخامة والراحة العصرية. اكتشف مجموعتنا المختارة بعناية لتناسب ذوقك الرفيع.",
         hero_btn: "تصفح المنتجات",
@@ -44,6 +46,8 @@ const translations = {
         nav_contact: "Contact",
         nav_about: "About",
         nav_shop: "Shop",
+        nav_bag: "Bag",
+        announce: "Worldwide shipping from Qatar | Order directly on WhatsApp",
         hero_title: "GEL BRAND",
         hero_desc: "We don't just sell clothes; we create a lifestyle that blends luxury with modern comfort. Discover our carefully selected collection to suit your refined taste.",
         hero_btn: "Browse Products",
@@ -103,7 +107,10 @@ function setLanguage(lang) {
     // Update the language button text/icon if needed
     const langLabel = document.getElementById('current-lang-label');
     if (langLabel) {
-        langLabel.textContent = lang === 'ar' ? 'العربية' : 'English';
+        // The button shows the language you can switch to
+        langLabel.textContent = lang === 'ar' ? 'EN' : 'ع';
+        langLabel.lang = lang === 'ar' ? 'en' : 'ar';
+        langLabel.parentElement.setAttribute('aria-label', lang === 'ar' ? 'Switch to English' : 'التبديل إلى العربية');
     }
 
     // Specific update for Add to Cart buttons that aren't dynamic
@@ -115,20 +122,6 @@ function setLanguage(lang) {
 
     updateCartUI(); // Refresh cart text
 }
-
-function toggleLangDropdown() {
-    const dropdown = document.getElementById('lang-dropdown');
-    if (dropdown) dropdown.classList.toggle('active');
-}
-
-// Close dropdown when clicking outside
-window.addEventListener('click', function(e) {
-    const dropdown = document.getElementById('lang-dropdown');
-    const langBtn = document.querySelector('.lang-switcher-container');
-    if (dropdown && !langBtn.contains(e.target)) {
-        dropdown.classList.remove('active');
-    }
-});
 
 // 1. وظيفة تشغيل الحركات عند تحميل الصفحة بالكامل
 function revealContent() {
@@ -250,7 +243,7 @@ function updateCartUI() {
     if (!cartItemsContainer) return;
 
     const totalQty = cart.reduce((total, item) => total + item.quantity, 0);
-    cartCount.innerText = totalQty;
+    cartCount.innerText = totalQty > 0 ? `(${totalQty})` : '';
     
     if (cart.length === 0) {
         cartItemsContainer.innerHTML = `
@@ -304,22 +297,16 @@ function checkout() {
     const whatsappUrl = `https://wa.me/97431121124?text=${encodeURIComponent(message)}`; 
     window.open(whatsappUrl, '_blank');
 }
-// --- Header: compact on scroll, and a menu button for small screens ---
+// --- Header: compact on scroll, and the menu button on small screens ---
 (function setupHeader() {
-    const header = document.querySelector('header');
-    const list = header && header.querySelector('ul');
-    if (!header || !list) return;
+    const header = document.querySelector('.site-header');
+    const button = header && header.querySelector('.nav-toggle');
+    if (!header || !button) return;
 
-    const onScroll = () => header.classList.toggle('scrolled', window.scrollY > 10);
+    const onScroll = () => header.classList.toggle('scrolled', window.scrollY > 40);
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
 
-    const item = document.createElement('li');
-    item.className = 'nav-toggle-item';
-    item.innerHTML = '<button type="button" class="nav-toggle" aria-label="Menu" aria-expanded="false"><i class="fas fa-bars"></i></button>';
-    list.appendChild(item);
-
-    const button = item.querySelector('button');
     const icon = button.querySelector('i');
     const setOpen = (open) => {
         header.classList.toggle('nav-open', open);

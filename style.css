@@ -32,84 +32,56 @@ body {
 }
 
 /* ==========================================
-   2. Header & Navigation Styles
-   Desktop: logo, then the page links, with language and bag pushed to the far end.
-   Mobile: logo, language, bag and a menu button; the links open as a list below.
+   2. Announcement bar & header
+   The owl sits in the centre; page links on one side, language and bag on the other.
    ========================================== */
-header {
+.announcement {
+    background: var(--primary-color);
+    color: #f3f4f1;
+    text-align: center;
+    font-size: 12px;
+    letter-spacing: 0.4px;
+    padding: 9px 16px;
+}
+
+.site-header {
     position: sticky;
     top: 0;
     z-index: 1000;
-    width: 100%;
-    height: 76px;
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    gap: 56px;
+    height: 80px;
     padding: 0 6%;
     background: #ffffff;
     border-bottom: 1px solid #ececec;
     transition: height 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Slightly slimmer, with a soft shadow, once the page is scrolled */
-header.scrolled {
-    height: 64px;
+.site-header.scrolled {
+    height: 66px;
     box-shadow: 0 6px 24px rgba(0, 0, 0, 0.05);
 }
 
-header h2 {
-    margin: 0;
-    line-height: 1;
-}
-
-header .logo-container {
+.nav-links {
+    grid-column: 1;
     display: flex;
     align-items: center;
-    gap: 10px;
-    text-decoration: none;
-    color: var(--primary-color);
+    gap: 32px;
 }
 
-header .logo-img {
-    height: 42px;
-    width: auto;
-    object-fit: contain;
-}
-
-/* The owl stands alone as the mark; the brand name stays for screen readers only */
-header .logo {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
-}
-
-header ul {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    gap: 36px;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
-header ul li a {
+.nav-links a {
     position: relative;
-    display: inline-block;
     padding: 6px 0;
     color: var(--text-muted);
     text-decoration: none;
     font-size: 15px;
     font-weight: 500;
-    letter-spacing: 0.3px;
     transition: color 0.25s ease;
 }
 
-/* Underline that grows from the centre on hover and stays on the current page */
-header ul li a::after {
+/* Underline that grows from the centre on hover and marks the current page */
+.nav-links a::after {
     content: "";
     position: absolute;
     left: 0;
@@ -121,175 +93,172 @@ header ul li a::after {
     transition: transform 0.3s ease;
 }
 
-header ul li a:hover,
-header ul li a.active {
+.nav-links a:hover,
+.nav-links a.active {
     color: var(--primary-color);
 }
 
-header ul li a:hover::after,
-header ul li a.active::after {
+.nav-links a:hover::after,
+.nav-links a.active::after {
     transform: scaleX(1);
 }
 
-/* Bag and language sit together at the far end */
-header ul li.cart-icon {
-    margin-inline-start: auto;
+.logo-container {
+    grid-column: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
 }
 
-header ul li.cart-icon a {
-    padding: 6px;
+.logo-container .logo-img {
+    height: 44px;
+    width: auto;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.logo-container:hover .logo-img {
+    transform: scale(1.04);
+}
+
+/* The owl stands alone as the mark; the name stays for screen readers only */
+.logo-container .logo {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+.nav-actions {
+    grid-column: 3;
+    justify-self: end;
+    display: flex;
+    align-items: center;
+    gap: 28px;
+}
+
+.lang-btn,
+.cart-icon {
+    background: none;
+    border: 0;
+    padding: 6px 0;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 500;
     color: var(--primary-color);
+    transition: opacity 0.2s ease;
 }
 
-header ul li.cart-icon a::after {
-    display: none;
-}
-
-/* Language switcher */
-.lang-switcher-container {
-    position: relative;
+.lang-btn:hover,
+.cart-icon:hover {
+    opacity: 0.65;
 }
 
 .lang-btn {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    height: 38px;
-    padding: 0 14px;
-    background: transparent;
-    border: 1px solid #e6e6e6;
-    border-radius: 999px;
-    cursor: pointer;
-    font-family: inherit;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--text-muted);
-    transition: border-color 0.25s ease, color 0.25s ease;
+    min-width: 24px;
+    letter-spacing: 1px;
 }
 
-.lang-btn:hover {
-    border-color: var(--primary-color);
-    color: var(--primary-color);
+.cart-icon {
+    display: inline-flex;
+    gap: 4px;
+    white-space: nowrap;
 }
 
-.lang-dropdown {
-    position: absolute;
-    top: calc(100% + 10px);
-    inset-inline-end: 0;
-    width: 160px;
-    padding: 6px;
-    background: #ffffff;
-    border: 1px solid #ececec;
-    border-radius: 10px;
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(6px);
-    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
-    z-index: 2000;
+#cart-count {
+    font-variant-numeric: tabular-nums;
 }
 
-.lang-dropdown.active {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-}
-
-.lang-option {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 14px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 14px;
-    color: var(--text-muted);
-    transition: background 0.2s ease, color 0.2s ease;
-}
-
-.lang-option:hover {
-    background: #f6f6f6;
-    color: var(--primary-color);
-}
-
-/* Menu button: only shown on small screens (added by main.js) */
 .nav-toggle {
     display: none;
 }
 
 @media (max-width: 860px) {
-    header {
-        display: grid;
-        grid-template-columns: 1fr auto auto auto;
-        align-items: center;
-        gap: 6px 10px;
-        height: auto;
-        min-height: 64px;
-        padding: 10px 5%;
+    .announcement {
+        font-size: 11px;
+        padding: 8px 12px;
     }
 
-    header.scrolled {
-        height: auto;
+    .site-header {
+        height: 64px;
+        padding: 0 5%;
     }
 
-    /* The list's items become direct grid items of the header */
-    header ul {
-        display: contents;
-    }
-
-    header ul li.cart-icon {
-        margin-inline-start: 0;
-    }
-
-    .lang-switcher-container { order: 1; }
-    header ul li.cart-icon { order: 2; }
-    .nav-toggle-item { order: 3; }
-
-    /* Page links: hidden until the menu is opened, then listed full width */
-    header ul li:not(.cart-icon):not(.lang-switcher-container):not(.nav-toggle-item) {
-        display: none;
-        order: 4;
-        grid-column: 1 / -1;
-        border-top: 1px solid #f0f0f0;
-    }
-
-    header.nav-open ul li:not(.cart-icon):not(.lang-switcher-container):not(.nav-toggle-item) {
-        display: block;
-    }
-
-    header ul li:not(.cart-icon) > a {
-        display: block;
-        padding: 14px 0;
-        font-size: 17px;
-    }
-
-    header ul li a::after {
-        display: none;
+    .site-header.scrolled {
+        height: 58px;
     }
 
     .nav-toggle {
+        grid-column: 1;
+        grid-row: 1;
+        justify-self: start;
         display: grid;
         place-items: center;
-        width: 42px;
-        height: 42px;
-        background: transparent;
+        width: 40px;
+        height: 40px;
+        margin-inline-start: -8px;
+        background: none;
         border: 0;
         cursor: pointer;
+        font-size: 19px;
         color: var(--primary-color);
-        font-size: 20px;
     }
 
-    .lang-btn span {
-        display: none; /* globe icon only, to save space */
+    .logo-container {
+        grid-row: 1;
     }
 
-    .lang-btn {
-        width: 38px;
-        padding: 0;
-        justify-content: center;
+    .logo-container .logo-img {
+        height: 34px;
     }
 
-    header .logo-img { height: 34px; }
+    .nav-actions {
+        grid-row: 1;
+        gap: 18px;
+    }
+
+    .lang-btn,
+    .cart-icon {
+        font-size: 14px;
+    }
+
+    /* Links drop down as a full-width list under the bar */
+    .nav-links {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        padding: 4px 5% 16px;
+        background: #ffffff;
+        border-bottom: 1px solid #ececec;
+        box-shadow: 0 16px 30px rgba(0, 0, 0, 0.06);
+        display: none;
+    }
+
+    .site-header.nav-open .nav-links {
+        display: flex;
+    }
+
+    .nav-links a {
+        padding: 14px 0;
+        font-size: 17px;
+        border-bottom: 1px solid #f2f2f2;
+    }
+
+    .nav-links a:last-child {
+        border-bottom: 0;
+    }
+
+    .nav-links a::after {
+        display: none;
+    }
 }
 
 /* ==========================================
@@ -501,33 +470,6 @@ header ul li.cart-icon a::after {
 /* ==========================================
    5. Shopping Cart Sidebar
    ========================================== */
-.cart-icon {
-    position: relative;
-    cursor: pointer;
-    padding: 5px;
-}
-
-.cart-icon i {
-    font-size: 20px;
-    color: var(--primary-color);
-}
-
-#cart-count {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    background: var(--primary-color);
-    color: white;
-    font-size: 10px;
-    width: 18px;
-    height: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    font-weight: bold;
-}
-
 .cart-sidebar {
     position: fixed;
     top: 0;
