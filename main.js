@@ -489,7 +489,7 @@ function checkout() {
     });
 })();
 
-// --- Home hero: cross-fade between photos every 5 seconds ---
+// --- Home hero: cross-fade between photos every 3.5 seconds ---
 (function setupHeroSlider() {
     const slider = document.querySelector('.hero-slider');
     if (!slider) return;
@@ -512,7 +512,7 @@ function checkout() {
 
     function start() {
         if (reduceMotion || timer) return;
-        timer = setInterval(() => show(current + 1), 5000);
+        timer = setInterval(() => show(current + 1), 3500);
     }
 
     function stop() {
