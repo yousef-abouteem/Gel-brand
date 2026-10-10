@@ -2190,3 +2190,104 @@ footer.site-footer .footer-bottom {
         text-overflow: ellipsis;
     }
 }
+
+/* Footer link groups (details/summary) */
+.footer-col summary {
+    list-style: none;
+    cursor: default;
+}
+
+.footer-col summary::-webkit-details-marker {
+    display: none;
+}
+
+.footer-col summary {
+    margin-bottom: 18px;
+}
+
+.footer-col summary h4 {
+    display: inline;
+}
+
+/* Phones: compact, centred brand, then foldable groups */
+@media (max-width: 600px) {
+    footer.site-footer {
+        padding: 40px 20px 0;
+    }
+
+    .footer-grid {
+        display: block;
+        padding-bottom: 8px;
+    }
+
+    .footer-brand {
+        margin: 0 auto 28px;
+    }
+
+    .footer-logo {
+        gap: 8px;
+        margin-bottom: 12px;
+    }
+
+    .footer-logo .footer-logo-img {
+        height: 56px;
+    }
+
+    .footer-logo span {
+        font-size: 18px;
+    }
+
+    .footer-brand p {
+        margin-bottom: 16px;
+        font-size: 13px;
+    }
+
+    .footer-col {
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .footer-col:last-child {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .footer-col summary {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 18px 0;
+        margin-bottom: 0;
+        cursor: pointer;
+    }
+
+    .footer-col summary h4 {
+        margin: 0;
+        font-size: 15px;
+    }
+
+    .footer-col summary::after {
+        content: "+";
+        font-size: 22px;
+        font-weight: 300;
+        line-height: 1;
+        color: rgba(255, 255, 255, 0.7);
+        transition: transform 0.25s ease;
+    }
+
+    .footer-col[open] summary::after {
+        transform: rotate(45deg);
+    }
+
+    .footer-col ul {
+        gap: 14px;
+        padding-bottom: 20px;
+    }
+
+    footer.site-footer .footer-bottom {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 8px;
+        padding: 22px 0 28px;
+        border-top: 0;
+    }
+}

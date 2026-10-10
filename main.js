@@ -866,3 +866,21 @@ function checkout() {
         }
     });
 })();
+
+// --- Footer: link groups open on desktop, fold into tap-to-open rows on phones ---
+(function setupFooterGroups() {
+    const groups = document.querySelectorAll('.footer-col');
+    if (!groups.length) return;
+    const mobile = window.matchMedia('(max-width: 600px)');
+
+    function apply() {
+        groups.forEach(g => { g.open = !mobile.matches; });
+    }
+    groups.forEach(g => {
+        g.querySelector('summary').addEventListener('click', (e) => {
+            if (!mobile.matches) e.preventDefault(); // always open on larger screens
+        });
+    });
+    mobile.addEventListener('change', apply);
+    apply();
+})();
