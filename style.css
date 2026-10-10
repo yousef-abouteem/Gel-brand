@@ -1606,7 +1606,8 @@ footer.site-footer {
     font-size: 22px;
     font-weight: 400;
     letter-spacing: 10px;
-    margin-inline-start: 10px; /* balance the trailing letter-spacing */
+    direction: ltr;
+    padding-left: 10px; /* balance the space letter-spacing leaves after the last letter */
     line-height: 1;
 }
 
