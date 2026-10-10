@@ -60,58 +60,71 @@
         </div>
     </div>
 
-<!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content">
+<!-- Hero: full-width photos that change every few seconds -->
+    <section class="hero-slider" aria-label="GEL">
+        <div class="hero-slides">
+            <picture class="hero-picture">
+                <source media="(max-width: 700px)" srcset="IMG/hero-label-m.jpg">
+                <img class="hero-slide hero-slide--label is-active" src="IMG/hero-label.jpg" alt="">
+            </picture>
+            <img class="hero-slide" src="IMG/hero-tee.jpg" alt="">
+            <img class="hero-slide" src="IMG/hero-hoodie.jpg" alt="">
+        </div>
+        <div class="hero-shade"></div>
+
+        <div class="hero-slider-content">
             <h1>GEL BRAND</h1>
             <p data-i18n="hero_desc">نحن لا نبيع الملابس فقط، نحن نصنع أسلوب حياة يجمع بين الفخامة والراحة العصرية. اكتشف مجموعتنا المختارة بعناية لتناسب ذوقك الرفيع.</p>
-            <a href="shop.html" class="hero-btn" data-i18n="hero_btn">تصفح المنتجات</a>
+            <a href="shop.html" class="hero-slider-btn" data-i18n="hero_btn">تصفح المنتجات</a>
         </div>
-        <div class="hero-logo">
-            <img src="IMG/Logo.PNG" alt="GEL Owl Logo">
+
+        <div class="hero-dots" role="group" aria-label="Slides">
+            <button type="button" class="hero-dot is-active" aria-label="1" aria-current="true"></button>
+            <button type="button" class="hero-dot" aria-label="2"></button>
+            <button type="button" class="hero-dot" aria-label="3"></button>
         </div>
     </section>
 
     <section id="gallery" class="gallery">
         <div class="gallery-item">
-            <img src="IMG/IMG_4255.JPG" alt="Product 1">
+            <img src="IMG/gel-tee.jpg" alt="Product 1">
             <div class="product-info">
                 <h3>GEL Signature Tee</h3>
                 <p class="price">120 QAR</p>
-                <button class="add-to-cart" onclick="addToCart('GEL Signature Tee', 120, 'IMG/IMG_4255.JPG', event)" data-i18n="add_to_cart">أضف للسلة</button>
+                <button class="add-to-cart" onclick="addToCart('GEL Signature Tee', 120, 'IMG/gel-tee.jpg', event)" data-i18n="add_to_cart">أضف للسلة</button>
             </div>
         </div>
         <div class="gallery-item">
             
-            <img src="IMG/IMG_4253.JPG" alt="Product 2">
+            <img src="IMG/gel-hoodie.jpg" alt="Product 2">
             <div class="product-info">
                 <h3>GEL Oversized Hoodie</h3>
                 <p class="price">250 QAR</p>
-                <button class="add-to-cart" onclick="addToCart('GEL Oversized Hoodie', 250, 'IMG/IMG_4253.JPG', event)" data-i18n="add_to_cart">أضف للسلة</button>
+                <button class="add-to-cart" onclick="addToCart('GEL Oversized Hoodie', 250, 'IMG/gel-hoodie.jpg', event)" data-i18n="add_to_cart">أضف للسلة</button>
             </div>
         </div>
         <div class="gallery-item">
-            <img src="IMG/IMG_4254.JPG" alt="Product 3">
+            <img src="IMG/gel-cap.jpg" alt="Product 3">
             <div class="product-info">
                 <h3>GEL Classic Cap</h3>
                 <p class="price">85 QAR</p>
-                <button class="add-to-cart" onclick="addToCart('GEL Classic Cap', 85, 'IMG/IMG_4254.JPG', event)" data-i18n="add_to_cart">أضف للسلة</button>
+                <button class="add-to-cart" onclick="addToCart('GEL Classic Cap', 85, 'IMG/gel-cap.jpg', event)" data-i18n="add_to_cart">أضف للسلة</button>
             </div>
         </div>
         <div class="gallery-item">
-            <img src="IMG/IMG_4256.JPG" alt="Product 4">
+            <img src="IMG/gel-jacket.jpg" alt="Product 4">
             <div class="product-info">
                 <h3>GEL Urban Jacket</h3>
                 <p class="price">450 QAR</p>
-                <button class="add-to-cart" onclick="addToCart('GEL Urban Jacket', 450, 'IMG/IMG_4256.JPG', event)" data-i18n="add_to_cart">أضف للسلة</button>
+                <button class="add-to-cart" onclick="addToCart('GEL Urban Jacket', 450, 'IMG/gel-jacket.jpg', event)" data-i18n="add_to_cart">أضف للسلة</button>
             </div>
         </div>
         <div class="gallery-item">
-            <img src="IMG/IMG_4258.JPG" alt="Product 5">
+            <img src="IMG/gel-shorts.jpg" alt="Product 5">
             <div class="product-info">
                 <h3>GEL Minimalist Shorts</h3>
                 <p class="price">110 QAR</p>
-                <button class="add-to-cart" onclick="addToCart('GEL Minimalist Shorts', 110, 'IMG/IMG_4258.JPG', event)" data-i18n="add_to_cart">أضف للسلة</button>
+                <button class="add-to-cart" onclick="addToCart('GEL Minimalist Shorts', 110, 'IMG/gel-shorts.jpg', event)" data-i18n="add_to_cart">أضف للسلة</button>
             </div>
         </div>
     </section>
