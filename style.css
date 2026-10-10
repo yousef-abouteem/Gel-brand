@@ -1727,6 +1727,7 @@ footer.site-footer .footer-bottom {
 
     .footer-brand {
         grid-column: 1 / -1;
+        justify-self: center; /* centre the logo block on phones and tablets */
     }
 }
 
