@@ -1916,8 +1916,7 @@ footer.site-footer .footer-bottom {
 }
 
 .pp-info {
-    position: sticky;
-    top: 110px;
+    position: static;
 }
 
 .pp-info h1 {
