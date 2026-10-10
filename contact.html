@@ -58,34 +58,82 @@
         </div>
     </div>
 
-   <!-- Contact Hero Section -->
-    <section class="hero contact-hero">
-        <div class="hero-content contact-content">
+    <main class="contact-page">
+        <div class="contact-top">
+            <nav class="breadcrumb" aria-label="Breadcrumb">
+                <a href="index.html" data-i18n="nav_home">الرئيسية</a>
+                <span aria-hidden="true">/</span>
+                <span aria-current="page" data-i18n="nav_contact">تواصل معنا</span>
+            </nav>
             <h1 data-i18n="contact_title">تواصل معنا</h1>
-            <p class="contact-subtitle" data-i18n="contact_desc">هل لديك سؤال أو تحتاج إلى مساعدة؟ أرسل لنا رسالة أو تواصل معنا عبر الواتساب.</p>
-            
-            <form action="https://formsubmit.co/gelvoguee@gmail.com" method="POST" class="contact-form-modern">
+            <p data-i18n="contact_desc">لديك سؤال عن مقاس أو طلب؟ تواصل معنا بالطريقة التي تناسبك.</p>
+        </div>
+
+        <div class="contact-grid">
+            <div class="contact-cards">
+                <a class="contact-card contact-card--main" href="https://wa.me/97431121124" target="_blank" rel="noopener">
+                    <span class="cc-icon"><i class="fab fa-whatsapp" aria-hidden="true"></i></span>
+                    <span class="cc-text">
+                        <strong data-i18n="cc_wa_title">واتساب</strong>
+                        <span data-i18n="cc_wa_desc">أسرع طريقة للطلب والاستفسار</span>
+                        <bdi dir="ltr" class="cc-value">+974 3112 1124</bdi>
+                    </span>
+                    <i class="fas fa-arrow-left cc-arrow" aria-hidden="true"></i>
+                </a>
+                <a class="contact-card" href="https://www.instagram.com/gelvogue.qa/" target="_blank" rel="noopener">
+                    <span class="cc-icon"><i class="fab fa-instagram" aria-hidden="true"></i></span>
+                    <span class="cc-text">
+                        <strong data-i18n="cc_ig_title">إنستقرام</strong>
+                        <span data-i18n="cc_ig_desc">أحدث القطع والإطلالات</span>
+                        <bdi dir="ltr" class="cc-value">@gelvogue.qa</bdi>
+                    </span>
+                    <i class="fas fa-arrow-left cc-arrow" aria-hidden="true"></i>
+                </a>
+                <a class="contact-card" href="mailto:gelvoguee@gmail.com">
+                    <span class="cc-icon"><i class="far fa-envelope" aria-hidden="true"></i></span>
+                    <span class="cc-text">
+                        <strong data-i18n="cc_mail_title">البريد الإلكتروني</strong>
+                        <span data-i18n="cc_mail_desc">للتعاون والاستفسارات العامة</span>
+                        <bdi dir="ltr" class="cc-value">gelvoguee@gmail.com</bdi>
+                    </span>
+                    <i class="fas fa-arrow-left cc-arrow" aria-hidden="true"></i>
+                </a>
+                <div class="contact-card contact-card--plain">
+                    <span class="cc-icon"><i class="fas fa-location-dot" aria-hidden="true"></i></span>
+                    <span class="cc-text">
+                        <strong data-i18n="cc_loc_title">الموقع</strong>
+                        <span data-i18n="footer_location">قطر · شحن دولي</span>
+                    </span>
+                </div>
+            </div>
+
+            <form action="https://formsubmit.co/gelvoguee@gmail.com" method="POST" class="contact-form">
+                <h2 data-i18n="contact_form_title">أرسل لنا رسالة</h2>
+                <div class="contact-sent" id="contact-sent" role="status" hidden>
+                    <i class="fas fa-circle-check" aria-hidden="true"></i>
+                    <span data-i18n="contact_sent">شكرًا لك! وصلتنا رسالتك وسنرد عليك قريبًا.</span>
+                </div>
                 <input type="hidden" name="_subject" value="New message from GEL website">
                 <input type="hidden" name="_template" value="table">
+                <input type="hidden" name="_next" id="contact-next" value="">
                 <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
-                <input type="text" name="name" placeholder="الاسم" data-i18n-placeholder="contact_name_ph" required>
-                <input type="email" name="email" placeholder="البريد الإلكتروني" data-i18n-placeholder="contact_email_ph" required>
-                <textarea name="message" rows="5" placeholder="رسالتك" data-i18n-placeholder="contact_msg_ph" required></textarea>
-                <button type="submit" class="contact-submit-btn" data-i18n="contact_send_btn">إرسال</button>
+
+                <label class="field">
+                    <span data-i18n="contact_name">الاسم</span>
+                    <input type="text" name="name" autocomplete="name" required>
+                </label>
+                <label class="field">
+                    <span data-i18n="contact_email">البريد الإلكتروني</span>
+                    <input type="email" name="email" autocomplete="email" dir="ltr" required>
+                </label>
+                <label class="field">
+                    <span data-i18n="contact_msg">رسالتك</span>
+                    <textarea name="message" rows="5" required></textarea>
+                </label>
+                <button type="submit" class="contact-send" data-i18n="contact_send">إرسال</button>
             </form>
-
-            <div class="whatsapp-card">
-                <span data-i18n="whatsapp_text">أو تواصل معنا مباشرة عبر الواتساب:</span>
-                <a href="https://wa.me/97431121124" class="whatsapp-link" target="_blank">
-                    <i class="fab fa-whatsapp"></i> <span data-i18n="whatsapp_btn">واتساب</span>
-                </a>
-            </div>
         </div>
-
-        <div class="hero-logo">
-            <img src="IMG/Logo.PNG" alt="GEL Owl Logo">
-        </div>
-    </section>
+    </main>
 
     <footer class="site-footer">
         <div class="footer-grid">

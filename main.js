@@ -22,7 +22,16 @@ const translations = {
         footer_contact: "تواصل",
         footer_location: "قطر · شحن دولي",
         contact_title: "تواصل معنا",
-        contact_desc: "نحن هنا لمساعدتك دائماً. يمكنك مراسلتنا عبر النموذج التالي:",
+        contact_desc: "لديك سؤال عن مقاس أو طلب؟ تواصل معنا بالطريقة التي تناسبك.",
+        contact_form_title: "أرسل لنا رسالة",
+        contact_sent: "شكرًا لك! وصلتنا رسالتك وسنرد عليك قريبًا.",
+        cc_wa_title: "واتساب",
+        cc_wa_desc: "أسرع طريقة للطلب والاستفسار",
+        cc_ig_title: "إنستقرام",
+        cc_ig_desc: "أحدث القطع والإطلالات",
+        cc_mail_title: "البريد الإلكتروني",
+        cc_mail_desc: "للتعاون والاستفسارات العامة",
+        cc_loc_title: "الموقع",
         contact_name: "الاسم",
         contact_email: "البريد الإلكتروني",
         contact_msg: "رسالتك",
@@ -92,7 +101,16 @@ const translations = {
         footer_contact: "Contact",
         footer_location: "Qatar · Ships worldwide",
         contact_title: "Contact Us",
-        contact_desc: "We are always here to help. You can message us via the form below:",
+        contact_desc: "A question about a size or an order? Reach us whichever way suits you.",
+        contact_form_title: "Send us a message",
+        contact_sent: "Thank you! We got your message and will reply soon.",
+        cc_wa_title: "WhatsApp",
+        cc_wa_desc: "The fastest way to order or ask",
+        cc_ig_title: "Instagram",
+        cc_ig_desc: "Latest pieces and looks",
+        cc_mail_title: "Email",
+        cc_mail_desc: "Collaborations and general questions",
+        cc_loc_title: "Location",
         contact_name: "Name",
         contact_email: "Email",
         contact_msg: "Your Message",
@@ -883,4 +901,14 @@ function checkout() {
     });
     mobile.addEventListener('change', apply);
     apply();
+})();
+
+// --- Contact form: come back to this page after sending and say thanks ---
+(function setupContactForm() {
+    const next = document.getElementById('contact-next');
+    if (!next) return;
+    next.value = location.origin + location.pathname + '?sent=1';
+    if (new URLSearchParams(location.search).get('sent') === '1') {
+        document.getElementById('contact-sent').hidden = false;
+    }
 })();

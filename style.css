@@ -2291,3 +2291,258 @@ footer.site-footer .footer-bottom {
         border-top: 0;
     }
 }
+
+/* ==========================================
+   Contact page
+   ========================================== */
+.contact-page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 6% 90px;
+}
+
+.contact-top {
+    margin-bottom: 36px;
+}
+
+.contact-top .breadcrumb {
+    margin-bottom: 14px;
+}
+
+.contact-top h1 {
+    font-size: clamp(28px, 3.4vw, 40px);
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+.contact-top p {
+    font-size: 15px;
+    color: var(--text-muted);
+    max-width: 520px;
+}
+
+.contact-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+    gap: 32px;
+    align-items: start;
+}
+
+.contact-cards {
+    display: grid;
+    gap: 12px;
+}
+
+.contact-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 20px;
+    border: 1px solid #ebebea;
+    border-radius: 12px;
+    background: #ffffff;
+    color: var(--text-color);
+    text-decoration: none;
+    transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+a.contact-card:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(20, 30, 22, 0.07);
+}
+
+.cc-icon {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: #eef1ee;
+    color: var(--primary-color);
+    font-size: 20px;
+}
+
+.cc-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    flex: 1;
+}
+
+.cc-text strong {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.cc-text > span {
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.cc-value {
+    margin-top: 4px;
+    font-size: 14px;
+    color: var(--text-color);
+    overflow-wrap: anywhere;
+}
+
+.cc-arrow {
+    color: #b9bdb9;
+    font-size: 14px;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+[dir="ltr"] .cc-arrow {
+    transform: scaleX(-1);
+}
+
+a.contact-card:hover .cc-arrow {
+    color: var(--primary-color);
+}
+
+/* WhatsApp is how orders come in, so it leads */
+.contact-card--main {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.contact-card--main .cc-icon {
+    background: rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+}
+
+.contact-card--main .cc-text strong,
+.contact-card--main .cc-value {
+    color: #ffffff;
+}
+
+.contact-card--main .cc-text > span {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.contact-card--main .cc-arrow,
+a.contact-card--main:hover .cc-arrow {
+    color: #ffffff;
+}
+
+.contact-card--plain {
+    background: transparent;
+}
+
+.contact-form {
+    padding: 28px;
+    border: 1px solid #ebebea;
+    border-radius: 14px;
+    background: #ffffff;
+}
+
+.contact-form h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+}
+
+.contact-sent {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    background: #eef6ef;
+    color: #1f5a2c;
+    font-size: 14px;
+}
+
+.contact-sent[hidden] {
+    display: none;
+}
+
+.contact-form .field {
+    display: block;
+    margin-bottom: 16px;
+}
+
+.contact-form .field > span {
+    display: block;
+    margin-bottom: 7px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.contact-form input,
+.contact-form textarea {
+    width: 100%;
+    padding: 13px 14px;
+    border: 1px solid #dcdcda;
+    border-radius: 8px;
+    background: #fafafa;
+    font-family: inherit;
+    font-size: 15px;
+    color: var(--text-color);
+    transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+[dir="rtl"] .contact-form input[type="email"] {
+    text-align: right;
+}
+
+.contact-form textarea {
+    resize: vertical;
+    min-height: 130px;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(44, 59, 48, 0.12);
+}
+
+.contact-send {
+    width: 100%;
+    margin-top: 4px;
+    padding: 15px;
+    border: 0;
+    border-radius: 8px;
+    background: var(--primary-color);
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.contact-send:hover {
+    background: var(--primary-light);
+}
+
+@media (max-width: 800px) {
+    .contact-page {
+        padding: 24px 20px 64px;
+    }
+
+    .contact-top {
+        margin-bottom: 24px;
+    }
+
+    .contact-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    .contact-form {
+        padding: 22px 18px;
+        order: -1; /* phones: the form comes first, the contact cards under it */
+    }
+}
