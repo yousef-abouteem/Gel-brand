@@ -1587,23 +1587,27 @@ footer.site-footer {
 
 .footer-logo {
     display: inline-flex;
+    flex-direction: column;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     color: #ffffff;
     text-decoration: none;
-    margin-bottom: 16px;
+    margin-bottom: 20px;
 }
 
 .footer-logo .footer-logo-img {
-    height: 46px;
+    height: 72px;
     width: auto;
     margin: 0;
 }
 
 .footer-logo span {
-    font-size: 20px;
-    font-weight: 700;
-    letter-spacing: 4px;
+    font-family: 'Times New Roman', Georgia, serif;
+    font-size: 22px;
+    font-weight: 400;
+    letter-spacing: 10px;
+    margin-inline-start: 10px; /* balance the trailing letter-spacing */
+    line-height: 1;
 }
 
 .footer-brand p {
