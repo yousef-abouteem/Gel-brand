@@ -2546,3 +2546,83 @@ a.contact-card--main:hover .cc-arrow {
         order: -1; /* phones: the form comes first, the contact cards under it */
     }
 }
+
+/* About page: one centred block of text */
+.ab-simple {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: clamp(64px, 12vh, 120px) 24px clamp(72px, 14vh, 140px);
+    text-align: center;
+}
+
+.ab-simple-owl {
+    height: 92px;
+    width: auto;
+    margin-bottom: 28px;
+}
+
+.ab-simple h1 {
+    font-size: clamp(30px, 4.4vw, 48px);
+    font-weight: 800;
+    color: var(--primary-color);
+    margin-bottom: 28px;
+}
+
+.ab-simple-lead {
+    font-size: clamp(18px, 2vw, 22px);
+    line-height: 2;
+    color: var(--text-color);
+    margin-bottom: 20px;
+}
+
+.ab-simple-text {
+    font-size: 16px;
+    line-height: 2;
+    color: var(--text-muted);
+}
+
+.ab-simple-rule {
+    display: block;
+    width: 48px;
+    height: 1px;
+    margin: 40px auto 24px;
+    background: #cfd3cf;
+}
+
+.ab-simple-motto {
+    font-family: 'Times New Roman', Georgia, serif;
+    font-size: 18px;
+    letter-spacing: 8px;
+    padding-left: 8px;
+    color: var(--primary-color);
+    margin-bottom: 36px;
+}
+
+.ab-simple-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--primary-color);
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 1px solid currentColor;
+    padding-bottom: 4px;
+}
+
+.ab-simple-link i {
+    font-size: 13px;
+    transition: transform 0.2s ease;
+}
+
+[dir="ltr"] .ab-simple-link i {
+    transform: scaleX(-1);
+}
+
+.ab-simple-link:hover i {
+    transform: translateX(-4px);
+}
+
+[dir="ltr"] .ab-simple-link:hover i {
+    transform: scaleX(-1) translateX(-4px);
+}
