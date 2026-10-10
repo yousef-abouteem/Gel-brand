@@ -304,3 +304,34 @@ function checkout() {
     const whatsappUrl = `https://wa.me/97431121124?text=${encodeURIComponent(message)}`; 
     window.open(whatsappUrl, '_blank');
 }
+// --- Header: compact on scroll, and a menu button for small screens ---
+(function setupHeader() {
+    const header = document.querySelector('header');
+    const list = header && header.querySelector('ul');
+    if (!header || !list) return;
+
+    const onScroll = () => header.classList.toggle('scrolled', window.scrollY > 10);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    const item = document.createElement('li');
+    item.className = 'nav-toggle-item';
+    item.innerHTML = '<button type="button" class="nav-toggle" aria-label="Menu" aria-expanded="false"><i class="fas fa-bars"></i></button>';
+    list.appendChild(item);
+
+    const button = item.querySelector('button');
+    const icon = button.querySelector('i');
+    const setOpen = (open) => {
+        header.classList.toggle('nav-open', open);
+        button.setAttribute('aria-expanded', String(open));
+        icon.className = open ? 'fas fa-xmark' : 'fas fa-bars';
+    };
+
+    button.addEventListener('click', () => setOpen(!header.classList.contains('nav-open')));
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') setOpen(false);
+    });
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 860) setOpen(false);
+    });
+})();

@@ -33,103 +33,137 @@ body {
 
 /* ==========================================
    2. Header & Navigation Styles
+   Desktop: logo, then the page links, with language and bag pushed to the far end.
+   Mobile: logo, language, bag and a menu button; the links open as a list below.
    ========================================== */
 header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 8%;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(15px); 
-    -webkit-backdrop-filter: blur(15px);
-    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.03);
     position: sticky;
     top: 0;
     z-index: 1000;
     width: 100%;
-    direction: rtl !important;
-    transition: var(--transition);
+    height: 76px;
+    display: flex;
+    align-items: center;
+    gap: 56px;
+    padding: 0 6%;
+    background: #ffffff;
+    border-bottom: 1px solid #ececec;
+    transition: height 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Slightly slimmer, with a soft shadow, once the page is scrolled */
+header.scrolled {
+    height: 64px;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.05);
+}
+
+header h2 {
+    margin: 0;
+    line-height: 1;
 }
 
 header .logo-container {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     text-decoration: none;
     color: var(--primary-color);
 }
 
 header .logo-img {
-    height: 40px;
+    height: 34px;
     width: auto;
     object-fit: contain;
     filter: brightness(0);
-    transition: var(--transition);
-}
-
-header .logo-container:hover .logo-img {
-    transform: scale(1.05);
 }
 
 header .logo {
-    font-size: 24px;
+    font-size: 22px;
     font-weight: 700;
-    letter-spacing: 3px;
+    letter-spacing: 6px;
     text-transform: uppercase;
     color: var(--primary-color);
 }
 
 header ul {
+    flex: 1;
     display: flex;
-    flex-direction: row !important;
-    list-style: none;
-    gap: 15px;
     align-items: center;
+    gap: 36px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
 header ul li a {
-    text-decoration: none;
+    position: relative;
+    display: inline-block;
+    padding: 6px 0;
     color: var(--text-muted);
-    padding: 8px 18px;
-    border-radius: 4px;
-    transition: var(--transition);
-    font-size: 13px;
+    text-decoration: none;
+    font-size: 15px;
     font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 0.3px;
+    transition: color 0.25s ease;
 }
 
-header ul li a:hover {
-    color: var(--primary-color);
+/* Underline that grows from the centre on hover and stays on the current page */
+header ul li a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1.5px;
+    background: var(--primary-color);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
 }
 
+header ul li a:hover,
 header ul li a.active {
     color: var(--primary-color);
-    font-weight: 700;
-    border-bottom: 2px solid var(--primary-color);
-    border-radius: 0;
-    padding-bottom: 4px;
 }
 
-/* Language Switcher */
+header ul li a:hover::after,
+header ul li a.active::after {
+    transform: scaleX(1);
+}
+
+/* Bag and language sit together at the far end */
+header ul li.cart-icon {
+    margin-inline-start: auto;
+}
+
+header ul li.cart-icon a {
+    padding: 6px;
+    color: var(--primary-color);
+}
+
+header ul li.cart-icon a::after {
+    display: none;
+}
+
+/* Language switcher */
 .lang-switcher-container {
     position: relative;
 }
 
 .lang-btn {
-    background: transparent;
-    border: 1px solid #eee;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-family: 'Poppins', sans-serif;
-    font-size: 12px;
-    font-weight: 500;
-    transition: var(--transition);
     display: flex;
     align-items: center;
     gap: 8px;
+    height: 38px;
+    padding: 0 14px;
+    background: transparent;
+    border: 1px solid #e6e6e6;
+    border-radius: 999px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
     color: var(--text-muted);
+    transition: border-color 0.25s ease, color 0.25s ease;
 }
 
 .lang-btn:hover {
@@ -139,18 +173,18 @@ header ul li a.active {
 
 .lang-dropdown {
     position: absolute;
-    top: 100%;
-    left: 0;
-    right: auto;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-    width: 150px;
-    padding: 8px;
+    top: calc(100% + 10px);
+    inset-inline-end: 0;
+    width: 160px;
+    padding: 6px;
+    background: #ffffff;
+    border: 1px solid #ececec;
+    border-radius: 10px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
     opacity: 0;
     visibility: hidden;
-    transform: translateY(10px);
-    transition: var(--transition);
+    transform: translateY(6px);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
     z-index: 2000;
 }
 
@@ -161,20 +195,101 @@ header ul li a.active {
 }
 
 .lang-option {
-    padding: 10px 15px;
-    cursor: pointer;
-    border-radius: 4px;
-    font-size: 13px;
-    transition: var(--transition);
     display: flex;
     align-items: center;
     gap: 10px;
+    padding: 10px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
     color: var(--text-muted);
+    transition: background 0.2s ease, color 0.2s ease;
 }
 
 .lang-option:hover {
-    background: #f9f9f9;
+    background: #f6f6f6;
     color: var(--primary-color);
+}
+
+/* Menu button: only shown on small screens (added by main.js) */
+.nav-toggle {
+    display: none;
+}
+
+@media (max-width: 860px) {
+    header {
+        display: grid;
+        grid-template-columns: 1fr auto auto auto;
+        align-items: center;
+        gap: 6px 10px;
+        height: auto;
+        min-height: 64px;
+        padding: 10px 5%;
+    }
+
+    header.scrolled {
+        height: auto;
+    }
+
+    /* The list's items become direct grid items of the header */
+    header ul {
+        display: contents;
+    }
+
+    header ul li.cart-icon {
+        margin-inline-start: 0;
+    }
+
+    .lang-switcher-container { order: 1; }
+    header ul li.cart-icon { order: 2; }
+    .nav-toggle-item { order: 3; }
+
+    /* Page links: hidden until the menu is opened, then listed full width */
+    header ul li:not(.cart-icon):not(.lang-switcher-container):not(.nav-toggle-item) {
+        display: none;
+        order: 4;
+        grid-column: 1 / -1;
+        border-top: 1px solid #f0f0f0;
+    }
+
+    header.nav-open ul li:not(.cart-icon):not(.lang-switcher-container):not(.nav-toggle-item) {
+        display: block;
+    }
+
+    header ul li:not(.cart-icon) > a {
+        display: block;
+        padding: 14px 0;
+        font-size: 17px;
+    }
+
+    header ul li a::after {
+        display: none;
+    }
+
+    .nav-toggle {
+        display: grid;
+        place-items: center;
+        width: 42px;
+        height: 42px;
+        background: transparent;
+        border: 0;
+        cursor: pointer;
+        color: var(--primary-color);
+        font-size: 20px;
+    }
+
+    .lang-btn span {
+        display: none; /* globe icon only, to save space */
+    }
+
+    .lang-btn {
+        width: 38px;
+        padding: 0;
+        justify-content: center;
+    }
+
+    header .logo-img { height: 30px; }
+    header .logo { font-size: 19px; letter-spacing: 4px; }
 }
 
 /* ==========================================
@@ -865,13 +980,6 @@ footer {
    9. Responsiveness
    ========================================== */
 @media (max-width: 768px) {
-    header { padding: 20px 5%; }
-    header .logo { font-size: 20px; }
-    
-    header ul li a {
-        font-size: 11px;
-        padding: 5px 10px;
-    }
 
     .hero,
     .about-hero,
@@ -920,7 +1028,6 @@ footer {
 }
 
 @media (max-width: 480px) {
-    header .logo { font-size: 18px; }
     .hero-content h1 { font-size: 28px; }
     
     .gallery {
@@ -964,24 +1071,6 @@ html, body {
 
 /* Responsive Styles for Mobile Devices */
 @media screen and (max-width: 768px) {
-    /* Header & Navigation Fixes */
-    header {
-        flex-direction: column;
-        padding: 15px 10px;
-        align-items: center;
-        gap: 15px;
-    }
-
-    header ul {
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 10px;
-        padding: 0;
-    }
-
-    header ul li a {
-        font-size: 13px;
-    }
 
     /* Fix Background Logo and Large Images */
     .hero-logo img, 
@@ -1009,4 +1098,9 @@ html, body {
         justify-content: center;
         gap: 10px;
     }
+}
+/* The closed bag sits just off-screen; only cast its shadow when it is open,
+   otherwise the shadow shows as a grey strip along the edge on phones. */
+.cart-sidebar:not(.active) {
+    box-shadow: none !important;
 }
