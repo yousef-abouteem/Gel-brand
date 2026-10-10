@@ -71,17 +71,19 @@ header .logo-container {
 }
 
 header .logo-img {
-    height: 34px;
+    height: 42px;
     width: auto;
     object-fit: contain;
 }
 
+/* The owl stands alone as the mark; the brand name stays for screen readers only */
 header .logo {
-    font-size: 22px;
-    font-weight: 700;
-    letter-spacing: 6px;
-    text-transform: uppercase;
-    color: var(--primary-color);
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
 }
 
 header ul {
@@ -287,8 +289,7 @@ header ul li.cart-icon a::after {
         justify-content: center;
     }
 
-    header .logo-img { height: 28px; }
-    header .logo { font-size: 19px; letter-spacing: 4px; }
+    header .logo-img { height: 34px; }
 }
 
 /* ==========================================
