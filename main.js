@@ -484,7 +484,14 @@ function checkout() {
     const button = header && header.querySelector('.nav-toggle');
     if (!header || !button) return;
 
-    const onScroll = () => header.classList.toggle('scrolled', window.scrollY > 40);
+    // Two thresholds, further apart than the header shrinks (14px). With one threshold,
+    // shrinking the header moved the page back under it and the header kept flipping
+    // between sizes, which made the page shake near the top.
+    const onScroll = () => {
+        const y = window.scrollY;
+        if (y > 80) header.classList.add('scrolled');
+        else if (y < 20) header.classList.remove('scrolled');
+    };
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
 
