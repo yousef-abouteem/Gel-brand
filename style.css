@@ -1111,6 +1111,14 @@ html, body {
     transform: scale(1);
 }
 
+.hero-picture {
+    display: contents;
+}
+
+.hero-slide--label {
+    object-position: center top;
+}
+
 .hero-shade {
     position: absolute;
     inset: 0;
@@ -1120,7 +1128,7 @@ html, body {
 .hero-slider-content {
     position: absolute;
     inset-inline: 0;
-    bottom: 96px;
+    bottom: clamp(56px, 10vh, 96px);
     max-width: 640px;
     margin: 0 auto;
     padding: 0 24px;
@@ -1131,7 +1139,7 @@ html, body {
 }
 
 .hero-slider-content h1 {
-    font-size: clamp(44px, 7vw, 88px);
+    font-size: clamp(40px, min(7vw, 9vh), 88px);
     font-weight: 800;
     line-height: 1;
     letter-spacing: 2px;
@@ -1143,7 +1151,7 @@ html, body {
     font-size: clamp(15px, 1.4vw, 18px);
     line-height: 1.8;
     color: rgba(255, 255, 255, 0.88);
-    margin-bottom: 32px;
+    margin-bottom: clamp(18px, 3.5vh, 32px);
 }
 
 .hero-slider-btn {

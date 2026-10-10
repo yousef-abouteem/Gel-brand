@@ -63,7 +63,10 @@
 <!-- Hero: full-width photos that change every few seconds -->
     <section class="hero-slider" aria-label="GEL">
         <div class="hero-slides">
-            <img class="hero-slide is-active" src="IMG/hero-label.jpg" alt="">
+            <picture class="hero-picture">
+                <source media="(max-width: 700px)" srcset="IMG/hero-label-m.jpg">
+                <img class="hero-slide hero-slide--label is-active" src="IMG/hero-label.jpg" alt="">
+            </picture>
             <img class="hero-slide" src="IMG/hero-tee.jpg" alt="">
             <img class="hero-slide" src="IMG/hero-hoodie.jpg" alt="">
         </div>
