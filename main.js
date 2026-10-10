@@ -17,6 +17,10 @@ const translations = {
         cart_checkout: "إتمام الطلب",
         footer_desc: "ملابس فاخرة للجيل العصري.",
         footer_rights: "جميع الحقوق محفوظة © 2026 براند GEL.",
+        footer_shop: "المتجر",
+        footer_info: "عن GEL",
+        footer_contact: "تواصل",
+        footer_location: "قطر · شحن دولي",
         contact_title: "تواصل معنا",
         contact_desc: "نحن هنا لمساعدتك دائماً. يمكنك مراسلتنا عبر النموذج التالي:",
         contact_name: "الاسم",
@@ -75,6 +79,10 @@ const translations = {
         cart_checkout: "Checkout",
         footer_desc: "Premium apparel for the modern generation.",
         footer_rights: "© 2026 GEL Brand. All rights reserved.",
+        footer_shop: "Shop",
+        footer_info: "GEL",
+        footer_contact: "Contact",
+        footer_location: "Qatar · Ships worldwide",
         contact_title: "Contact Us",
         contact_desc: "We are always here to help. You can message us via the form below:",
         contact_name: "Name",
@@ -560,5 +568,16 @@ function checkout() {
         });
     });
 
+    function applyHash() {
+        const wanted = location.hash.slice(1);
+        const chip = [...chips].find(c => c.dataset.filter === wanted);
+        if (chip) chip.click();
+    }
+    window.addEventListener('hashchange', () => {
+        applyHash();
+        document.querySelector('.shop-top')?.scrollIntoView({ behavior: 'smooth' });
+    });
+
     window.updateShopCount();
+    applyHash();
 })();
