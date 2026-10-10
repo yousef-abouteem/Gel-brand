@@ -243,7 +243,7 @@ function updateCartUI() {
     if (!cartItemsContainer) return;
 
     const totalQty = cart.reduce((total, item) => total + item.quantity, 0);
-    cartCount.innerText = totalQty > 0 ? `(${totalQty})` : '';
+    cartCount.innerText = totalQty > 0 ? totalQty : '';
     
     if (cart.length === 0) {
         cartItemsContainer.innerHTML = `
