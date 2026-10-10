@@ -1727,3 +1727,13 @@ footer.site-footer .footer-bottom {
     }
 }
 
+
+/* Chat button in lead grey so it stands out on both the white page and the green footer */
+#ai-chat-btn.ai-chat-btn {
+    background: #6B706D;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+#ai-chat-btn.ai-chat-btn:hover {
+    background: #5A5F5C;
+}
