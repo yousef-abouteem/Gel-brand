@@ -528,9 +528,8 @@ function checkout() {
         });
     });
 
-    // Pause while the visitor hovers or the tab is in the background
-    slider.addEventListener('mouseenter', stop);
-    slider.addEventListener('mouseleave', start);
+    // Pause only while the tab is in the background. (It used to pause on hover too,
+    // but the hero fills the screen, so the mouse is nearly always over it.)
     document.addEventListener('visibilitychange', () => (document.hidden ? stop() : start()));
 
     start();
