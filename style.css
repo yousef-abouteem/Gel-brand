@@ -1759,3 +1759,58 @@ footer.site-footer .footer-bottom {
 #ai-chat-btn.ai-chat-btn:hover {
     background: #5A5F5C;
 }
+
+/* ==========================================
+   Product card: front / side / back views
+   ========================================== */
+.product-media {
+    position: relative;
+    overflow: hidden;
+    background: #d6d6d4;
+}
+
+.product-media .product-view {
+    transition: opacity 0.45s ease;
+}
+
+.product-media .product-alt {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100% !important;
+    object-fit: cover;
+    opacity: 0;
+}
+
+.product-media .product-view:not(.is-active) {
+    opacity: 0;
+}
+
+.product-media .product-view.is-active {
+    opacity: 1;
+}
+
+.product-dots {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 14px;
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    pointer-events: none;
+}
+
+.product-dots span {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(44, 59, 48, 0.25);
+    transition: background 0.3s ease, width 0.3s ease;
+}
+
+.product-dots span.is-active {
+    width: 18px;
+    border-radius: 3px;
+    background: var(--primary-color);
+}

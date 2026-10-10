@@ -580,3 +580,84 @@ function checkout() {
     window.updateShopCount();
     applyHash();
 })();
+
+// --- Product cards: cycle front / side / back views ---
+// Desktop: while the mouse is over the card. Phones: while the card is in view.
+(function setupProductViews() {
+    const VIEWS = {
+        'gel-tee.jpg':    ['gel-tee-side.jpg', 'gel-tee-back.jpg'],
+        'gel-hoodie.jpg': ['gel-hoodie-side.jpg', 'gel-hoodie-back.jpg'],
+        'gel-jacket.jpg': ['gel-jacket-side.jpg', 'gel-jacket-back.jpg'],
+        'gel-shorts.jpg': ['gel-shorts-side.jpg', 'gel-shorts-back.jpg'],
+        'gel-cap.jpg':    ['gel-cap-side.jpg', 'gel-cap-back.jpg'],
+    };
+    const STEP_MS = 1100;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+    document.querySelectorAll('.gallery-item > img').forEach(front => {
+        const file = front.getAttribute('src').split('/').pop();
+        const extras = VIEWS[file];
+        if (!extras) return;
+        const dir = front.getAttribute('src').slice(0, -file.length);
+
+        // Wrap the photo so the other views can sit on top of it
+        const media = document.createElement('div');
+        media.className = 'product-media';
+        front.replaceWith(media);
+        media.appendChild(front);
+        front.classList.add('product-view', 'is-active');
+
+        const views = [front];
+        extras.forEach(name => {
+            const img = document.createElement('img');
+            img.src = dir + name;
+            img.alt = '';
+            img.loading = 'lazy';
+            img.decoding = 'async';
+            img.className = 'product-view product-alt';
+            media.appendChild(img);
+            views.push(img);
+        });
+
+        const dots = document.createElement('div');
+        dots.className = 'product-dots';
+        dots.setAttribute('aria-hidden', 'true');
+        views.forEach((_, i) => {
+            const d = document.createElement('span');
+            if (i === 0) d.className = 'is-active';
+            dots.appendChild(d);
+        });
+        media.appendChild(dots);
+
+        let current = 0;
+        let timer = null;
+        const show = (i) => {
+            views[current].classList.remove('is-active');
+            dots.children[current].classList.remove('is-active');
+            current = i % views.length;
+            views[current].classList.add('is-active');
+            dots.children[current].classList.add('is-active');
+        };
+        const start = () => {
+            if (timer || reduceMotion) return;
+            show(current + 1);
+            timer = setInterval(() => show(current + 1), STEP_MS);
+        };
+        const stop = () => {
+            clearInterval(timer);
+            timer = null;
+            show(0);
+        };
+
+        const card = media.closest('.gallery-item');
+        if (canHover) {
+            card.addEventListener('mouseenter', start);
+            card.addEventListener('mouseleave', stop);
+        } else if ('IntersectionObserver' in window) {
+            new IntersectionObserver(entries => {
+                entries.forEach(e => (e.isIntersecting ? start() : stop()));
+            }, { threshold: 0.75 }).observe(media);
+        }
+    });
+})();
