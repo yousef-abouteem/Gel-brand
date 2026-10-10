@@ -2099,3 +2099,40 @@ footer.site-footer .footer-bottom {
         grid-template-columns: auto minmax(0, 1fr);
     }
 }
+
+/* Product page photo zoom */
+.pp-main {
+    overflow-y: hidden;
+}
+
+.pp-main img {
+    transition: transform 0.35s ease;
+    cursor: zoom-in;
+}
+
+.pp-main img.is-zoomed {
+    transform: scale(1.12);
+}
+
+.pp-main img.is-zoomed-tap {
+    transform: scale(1.6);
+    cursor: zoom-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pp-main img {
+        transition: none;
+    }
+}
+
+/* Each photo sits in its own clipped slide so zooming never spills into the strip */
+.pp-slide {
+    flex: 0 0 100%;
+    overflow: hidden;
+    scroll-snap-align: center;
+}
+
+.pp-main .pp-slide img {
+    width: 100%;
+    height: 100%;
+}

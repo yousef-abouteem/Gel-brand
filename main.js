@@ -625,7 +625,10 @@ function checkout() {
         img.src = src;
         img.alt = i === 0 ? product.name : '';
         if (i > 0) img.loading = 'lazy';
-        main.appendChild(img);
+        const slide = document.createElement('div');
+        slide.className = 'pp-slide';
+        slide.appendChild(img);
+        main.appendChild(slide);
 
         const btn = document.createElement('button');
         btn.type = 'button';
@@ -659,6 +662,34 @@ function checkout() {
         }, { root: main, threshold: 0.6 });
         [...main.children].forEach(img => io.observe(img));
     }
+    // Zoom: on desktop the photo grows a little under the mouse;
+    // on phones a tap zooms in where you tapped and a second tap zooms back out.
+    const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    const setOrigin = (img, e) => {
+        const r = img.getBoundingClientRect();
+        img.style.transformOrigin = `${((e.clientX - r.left) / r.width) * 100}% ${((e.clientY - r.top) / r.height) * 100}%`;
+    };
+    [...main.querySelectorAll('img')].forEach(img => {
+        if (canHover) {
+            img.addEventListener('mouseenter', (e) => { setOrigin(img, e); img.classList.add('is-zoomed'); });
+            img.addEventListener('mousemove', (e) => setOrigin(img, e));
+            img.addEventListener('mouseleave', () => img.classList.remove('is-zoomed'));
+        } else {
+            img.addEventListener('click', (e) => {
+                if (img.classList.contains('is-zoomed-tap')) {
+                    img.classList.remove('is-zoomed-tap');
+                } else {
+                    setOrigin(img, e);
+                    img.classList.add('is-zoomed-tap');
+                }
+            });
+        }
+    });
+    // Swiping to another photo resets any tap zoom
+    main.addEventListener('scroll', () => {
+        main.querySelectorAll('.is-zoomed-tap').forEach(img => img.classList.remove('is-zoomed-tap'));
+    }, { passive: true });
+
     main.addEventListener('keydown', (e) => {
         if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
         e.preventDefault();
