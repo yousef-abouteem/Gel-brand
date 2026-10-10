@@ -1,23 +1,25 @@
 /* GEL — design tokens
-   Forest ink and moss come from the original brand green; olive is the colour of the
-   printed "Gel" on the tee; gypsum is a cool, slightly green off-white like the studio walls. */
+   White, quiet and photo-led. The only colour is the brand's forest ink, used for text and
+   buttons, and the olive of the printed "Gel" on the tee, kept for focus and small accents.
+   Image wells are a barely-there grey so white garments still read against the page. */
 :root {
   --ink: #1e2a22;
-  --moss: #2c3b30;
+  --moss: #34443a;
   --olive: #6e7745;
-  --olive-soft: #e3e6d6;
-  --gypsum: #e8ebe3;
-  --paper: #f6f7f3;
-  --line: #d3d8cc;
-  --muted: #5b665e;
+  --olive-soft: #e7e9de;
+  --gypsum: #f3f3f1;
+  --paper: #ffffff;
+  --line: #e4e4e0;
+  --muted: #6c716d;
   --white: #ffffff;
   --whatsapp: #1f7a4d;
   --danger: #9b2c2c;
 
-  --font-display: "Reem Kufi", system-ui, sans-serif;
-  --font-body: "IBM Plex Sans Arabic", system-ui, sans-serif;
+  /* Latin glyphs come from the Garamonds, Arabic falls through to Amiri / Noto Naskh. */
+  --font-display: var(--font-cormorant), var(--font-amiri), "Times New Roman", serif;
+  --font-body: var(--font-garamond), var(--font-naskh), Georgia, serif;
 
-  --radius: 6px;
+  --radius: 0px;
   --radius-pill: 999px;
   --container: 1240px;
   --gutter: clamp(16px, 4vw, 48px);
@@ -41,8 +43,8 @@ body {
   background: var(--paper);
   color: var(--ink);
   font-family: var(--font-body);
-  font-size: 1rem;
-  line-height: 1.7;
+  font-size: 1.0625rem;
+  line-height: 1.85;
   -webkit-font-smoothing: antialiased;
   overflow-x: clip;
 }
@@ -68,6 +70,15 @@ h2,
 h3,
 p {
   margin: 0;
+}
+
+h1,
+h2,
+h3,
+.lead,
+.hero__title,
+.hero__text {
+  text-wrap: balance;
 }
 
 :focus-visible {
@@ -127,8 +138,8 @@ p {
 .section__title {
   font-family: var(--font-display);
   font-weight: 500;
-  font-size: clamp(1.6rem, 2.6vw, 2.25rem);
-  line-height: 1.25;
+  font-size: clamp(1.75rem, 2.8vw, 2.5rem);
+  line-height: 1.3;
   margin-block-end: 20px;
 }
 .section__head .section__title {
@@ -142,7 +153,7 @@ p {
 
 .page-title {
   font-family: var(--font-display);
-  font-weight: 700;
+  font-weight: 500;
   font-size: clamp(2.25rem, 5vw, 3.75rem);
   line-height: 1.1;
   margin-block-end: 16px;
@@ -266,7 +277,7 @@ p {
   min-height: 40px;
   padding: 0 18px;
   border: 1px solid var(--line);
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius);
   background: transparent;
   font-size: 0.9375rem;
   cursor: pointer;
@@ -301,8 +312,7 @@ p {
   position: sticky;
   top: 0;
   z-index: 40;
-  background: color-mix(in srgb, var(--paper) 92%, transparent);
-  backdrop-filter: blur(10px);
+  background: var(--paper);
   border-block-end: 1px solid var(--line);
 }
 
@@ -324,10 +334,11 @@ p {
 }
 .wordmark__text {
   font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1.6rem;
-  letter-spacing: 0.04em;
+  font-weight: 600;
+  font-size: 1.75rem;
+  letter-spacing: 0.22em;
   line-height: 1;
+  direction: ltr;
 }
 
 .site-nav {
@@ -366,7 +377,7 @@ p {
   min-height: 40px;
   padding: 0 14px;
   border: 1px solid var(--line);
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius);
   background: transparent;
   font-size: 0.875rem;
   cursor: pointer;
@@ -449,93 +460,85 @@ p {
 }
 
 /* ---------- Hero ----------
-   The one bold move on the site: the GEL wordmark set at poster size. */
+   Two photographs edge to edge, then the wordmark set large in the serif, centred.
+   The photos carry the page; the type stays quiet around them. */
 
-.hero {
-  max-width: var(--container);
-  margin-inline: auto;
-  padding: clamp(24px, 4vw, 48px) var(--gutter) 0;
+.hero__media {
   display: grid;
-  grid-template-columns: 1.05fr 1fr;
-  gap: clamp(24px, 5vw, 72px);
-  align-items: end;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  height: min(86vh, 920px);
+  background: var(--paper);
+}
+.hero__frame {
+  position: relative;
+  overflow: hidden;
+  background: var(--gypsum);
+}
+.hero__frame img {
+  object-fit: cover;
+  animation: hero-in 1.4s var(--ease) both;
+}
+.hero__frame:last-child img {
+  animation-delay: 0.12s;
+}
+@keyframes hero-in {
+  from {
+    opacity: 0;
+    transform: scale(1.04);
+  }
 }
 
 .hero__copy {
-  padding-block-end: clamp(24px, 4vw, 56px);
+  max-width: 760px;
+  margin-inline: auto;
+  padding: clamp(48px, 7vw, 96px) var(--gutter) 0;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .hero__wordmark {
   font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(7rem, 21vw, 18rem);
-  line-height: 0.8;
-  letter-spacing: -0.02em;
-  margin-block-end: clamp(24px, 3vw, 40px);
-  margin-inline-start: -0.04em;
+  font-weight: 500;
+  font-size: clamp(4.5rem, 12vw, 9.5rem);
+  line-height: 0.9;
+  letter-spacing: 0.18em;
+  margin-inline-end: -0.18em; /* optically re-centre the tracked letters */
+  margin-block-end: 28px;
   direction: ltr;
-  text-align: start;
-  animation: wordmark-in 1.1s var(--ease) both;
-}
-[dir="rtl"] .hero__wordmark {
-  text-align: end;
-}
-
-@keyframes wordmark-in {
-  from {
-    clip-path: inset(100% 0 0 0);
-    transform: translateY(12%);
-  }
-  to {
-    clip-path: inset(0 0 0 0);
-    transform: none;
-  }
 }
 
 .hero__title {
   font-family: var(--font-display);
   font-weight: 500;
-  font-size: clamp(1.5rem, 2.4vw, 2rem);
-  line-height: 1.35;
-  max-width: 20ch;
+  font-size: clamp(1.5rem, 2.6vw, 2.1rem);
+  line-height: 1.4;
   margin-block-end: 12px;
 }
 
 .hero__text {
   color: var(--muted);
-  font-size: 1.0625rem;
-  max-width: 42ch;
-  margin-block-end: 32px;
+  max-width: 44ch;
+  margin-block-end: 36px;
 }
 
 .hero__actions {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   align-items: center;
-  gap: 24px;
+  gap: 28px;
 }
 
-.hero__media {
-  position: relative;
-  aspect-ratio: 4 / 5;
-  border-radius: var(--radius) var(--radius) 0 0;
-  overflow: hidden;
-  background: var(--gypsum);
-}
-.hero__media img {
-  object-fit: cover;
-}
-
-@media (max-width: 900px) {
-  .hero {
-    grid-template-columns: 1fr;
-  }
-  .hero__copy {
-    padding-block-end: 0;
-  }
+@media (max-width: 700px) {
   .hero__media {
-    aspect-ratio: 4 / 4.2;
-    border-radius: var(--radius);
+    grid-template-columns: 1fr;
+    height: 72vh;
+  }
+  .hero__frame:last-child {
+    display: none;
   }
 }
 
@@ -606,7 +609,10 @@ p {
   gap: 12px;
 }
 .product-card__name {
-  font-weight: 500;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.2rem;
+  line-height: 1.4;
 }
 .product-card .price {
   color: var(--muted);
@@ -625,7 +631,7 @@ p {
 /* ---------- Values ---------- */
 
 .values {
-  background: var(--gypsum);
+  border-block: 1px solid var(--line);
   padding-block: clamp(56px, 8vw, 104px);
 }
 .values__grid {
@@ -635,13 +641,12 @@ p {
   margin-block-start: 16px;
 }
 .value {
-  padding-block-start: 20px;
-  border-block-start: 1.5px solid var(--olive);
+  padding-block-start: 4px;
 }
 .value__title {
   font-family: var(--font-display);
-  font-weight: 500;
-  font-size: 1.25rem;
+  font-weight: 600;
+  font-size: 1.5rem;
   margin-block-end: 8px;
 }
 .value p {
@@ -685,7 +690,7 @@ p {
 .order__steps li::before {
   content: counter(step);
   font-family: var(--font-display);
-  font-weight: 700;
+  font-weight: 500;
   font-size: 2rem;
   line-height: 1;
   color: var(--olive);
@@ -764,7 +769,7 @@ p {
 
 .product__name {
   font-family: var(--font-display);
-  font-weight: 700;
+  font-weight: 500;
   font-size: clamp(1.9rem, 3.4vw, 2.75rem);
   line-height: 1.15;
 }
@@ -941,8 +946,7 @@ p {
 }
 
 .owl-band {
-  background: var(--ink);
-  color: var(--paper);
+  border-block-start: 1px solid var(--line);
   padding-block: clamp(56px, 8vw, 104px);
 }
 .owl-band__inner {
@@ -951,7 +955,7 @@ p {
   gap: clamp(28px, 6vw, 80px);
 }
 .owl-band .lead {
-  color: color-mix(in srgb, var(--paper) 78%, transparent);
+  color: var(--muted);
 }
 
 @media (max-width: 900px) {
@@ -1027,8 +1031,7 @@ p {
 /* ---------- Footer ---------- */
 
 .site-footer {
-  background: var(--moss);
-  color: var(--paper);
+  border-block-start: 1px solid var(--line);
   padding-block: clamp(48px, 7vw, 88px) 28px;
 }
 .site-footer__inner {
@@ -1046,7 +1049,7 @@ p {
 }
 .site-footer__text {
   max-width: 34ch;
-  color: color-mix(in srgb, var(--paper) 75%, transparent);
+  color: var(--muted);
 }
 .site-footer__col {
   display: flex;
@@ -1055,11 +1058,11 @@ p {
 }
 .site-footer__col a {
   text-decoration: none;
-  color: color-mix(in srgb, var(--paper) 85%, transparent);
+  color: var(--muted);
   width: fit-content;
 }
 .site-footer__col a:hover {
-  color: var(--paper);
+  color: var(--ink);
   text-decoration: underline;
   text-underline-offset: 4px;
 }
@@ -1074,9 +1077,9 @@ p {
   max-width: calc(var(--container) - 2 * var(--gutter));
   margin: 56px auto 0;
   padding-block-start: 24px;
-  border-block-start: 1px solid color-mix(in srgb, var(--paper) 18%, transparent);
+  border-block-start: 1px solid var(--line);
   font-size: 0.875rem;
-  color: color-mix(in srgb, var(--paper) 60%, transparent);
+  color: var(--muted);
 }
 
 @media (max-width: 700px) {
@@ -1265,9 +1268,9 @@ p {
   flex-direction: column;
   background: var(--paper);
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: 2px;
   overflow: hidden;
-  box-shadow: 0 24px 60px -24px rgba(30, 42, 34, 0.45);
+  box-shadow: 0 24px 60px -24px rgba(30, 42, 34, 0.35);
   animation: chat-in 0.3s var(--ease);
 }
 @keyframes chat-in {
@@ -1317,7 +1320,7 @@ p {
 .bubble {
   max-width: 85%;
   padding: 10px 14px;
-  border-radius: 12px;
+  border-radius: 2px;
   font-size: 0.9375rem;
   line-height: 1.6;
   unicode-bidi: plaintext;

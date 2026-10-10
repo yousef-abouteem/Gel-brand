@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { IBM_Plex_Sans_Arabic, Reem_Kufi } from "next/font/google";
+import { Amiri, Cormorant_Garamond, EB_Garamond, Noto_Naskh_Arabic } from "next/font/google";
 import type { ReactNode } from "react";
 import { CartDrawer } from "@/components/CartDrawer";
 import { ChatWidget } from "@/components/ChatWidget";
@@ -9,19 +9,31 @@ import { Providers } from "@/components/Providers";
 import { brand } from "@/lib/brand";
 import "./globals.css";
 
-// Reem Kufi for the wordmark and headings, IBM Plex Sans Arabic for everything else.
-// Both cover Arabic and Latin, so the site looks the same in either language.
-const display = Reem_Kufi({
-  subsets: ["arabic", "latin"],
-  weight: ["500", "700"],
-  variable: "--font-display",
+// A Garamond pairing for Latin text and classic Naskh faces for Arabic.
+// Cormorant + Amiri for the wordmark and headings, EB Garamond + Noto Naskh for reading text.
+const cormorant = Cormorant_Garamond({
+  subsets: ["latin"],
+  weight: ["500", "600"],
+  variable: "--font-cormorant",
   display: "swap",
 });
 
-const body = IBM_Plex_Sans_Arabic({
-  subsets: ["arabic", "latin"],
-  weight: ["300", "400", "500", "600"],
-  variable: "--font-body",
+const amiri = Amiri({
+  subsets: ["arabic"],
+  weight: ["400", "700"],
+  variable: "--font-amiri",
+  display: "swap",
+});
+
+const garamond = EB_Garamond({
+  subsets: ["latin"],
+  variable: "--font-garamond",
+  display: "swap",
+});
+
+const naskh = Noto_Naskh_Arabic({
+  subsets: ["arabic"],
+  variable: "--font-naskh",
   display: "swap",
 });
 
@@ -43,7 +55,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="ar" dir="rtl" className={`${display.variable} ${body.variable}`} suppressHydrationWarning>
+    <html lang="ar" dir="rtl" className={`${cormorant.variable} ${amiri.variable} ${garamond.variable} ${naskh.variable}`} suppressHydrationWarning>
       <body>
         <Providers>
           <Header />

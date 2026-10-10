@@ -12,7 +12,7 @@ export function Footer() {
     <footer className="site-footer">
       <div className="site-footer__inner">
         <div className="site-footer__brand">
-          <Owl tone="light" height={56} />
+          <Owl height={56} />
           <p className="site-footer__text">{t("footer_text")}</p>
         </div>
 

@@ -26,7 +26,7 @@ export function AboutContent() {
 
       <section className="owl-band">
         <div className="container owl-band__inner">
-          <Owl tone="light" height={140} />
+          <Owl height={140} />
           <div>
             <h2 className="section__title">{t("about_owl_title")}</h2>
             <p className="lead">{t("about_owl_text")}</p>

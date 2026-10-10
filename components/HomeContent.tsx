@@ -13,6 +13,14 @@ export function HomeContent() {
   return (
     <>
       <section className="hero">
+        <div className="hero__media">
+          <div className="hero__frame">
+            <Image src="/images/shorts.jpg" alt="" fill priority sizes="(max-width: 700px) 100vw, 50vw" />
+          </div>
+          <div className="hero__frame">
+            <Image src="/images/tee.jpg" alt="" fill priority sizes="50vw" />
+          </div>
+        </div>
         <div className="hero__copy">
           <h1 className="hero__wordmark" aria-label="GEL">
             GEL
@@ -27,15 +35,6 @@ export function HomeContent() {
               {t("hero_secondary")}
             </Link>
           </div>
-        </div>
-        <div className="hero__media">
-          <Image
-            src="/images/shorts.jpg"
-            alt=""
-            fill
-            priority
-            sizes="(max-width: 900px) 100vw, 50vw"
-          />
         </div>
       </section>
 
