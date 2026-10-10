@@ -26,7 +26,7 @@ html {
 body {
     background-color: var(--bg-color);
     font-family: 'Poppins', sans-serif;
-    overflow-x: hidden;
+    overflow-x: clip;
     color: var(--text-color);
     line-height: 1.6;
 }
@@ -53,9 +53,11 @@ body {
     align-items: center;
     height: 80px;
     padding: 0 6%;
-    background: #ffffff;
-    border-bottom: 1px solid #ececec;
-    transition: height 0.3s ease, box-shadow 0.3s ease;
+    background: rgba(255, 255, 255, 0.72);
+    -webkit-backdrop-filter: saturate(160%) blur(16px);
+    backdrop-filter: saturate(160%) blur(16px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    transition: height 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
 }
 
 .site-header.scrolled {
@@ -257,6 +259,8 @@ body {
     /* Links drop down as a full-width list under the bar */
     .nav-links {
         position: absolute;
+        grid-column: auto; /* auto placement = the header's full width, not one grid column */
+        grid-row: auto;
         top: 100%;
         left: 0;
         right: 0;
@@ -1034,7 +1038,7 @@ footer {
 /* Fix Horizontal Overflow for Mobile */
 html, body {
     max-width: 100% !important;
-    overflow-x: hidden !important;
+    overflow-x: clip !important; /* clip (not hidden) so the sticky header keeps working */
     margin: 0;
     padding: 0;
 }
