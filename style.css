@@ -71,10 +71,9 @@ header .logo-container {
 }
 
 header .logo-img {
-    height: 46px;
+    height: 34px;
     width: auto;
     object-fit: contain;
-    filter: brightness(0);
 }
 
 header .logo {
@@ -288,7 +287,7 @@ header ul li.cart-icon a::after {
         justify-content: center;
     }
 
-    header .logo-img { height: 40px; }
+    header .logo-img { height: 28px; }
     header .logo { font-size: 19px; letter-spacing: 4px; }
 }
 
