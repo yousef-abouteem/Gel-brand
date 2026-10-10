@@ -34,6 +34,14 @@ const translations = {
         shop_subtitle: "اكتشف أحدث تصاميمنا الحصرية",
         add_to_cart: "أضف للسلة",
         added: "تمت الإضافة!",
+        size_choose: "اختر المقاس",
+        size_one: "مقاس واحد",
+        size_label: "المقاس",
+        qty_label: "الكمية",
+        subtotal_label: "المجموع",
+        close: "إغلاق",
+        order_greeting: "مرحباً GEL Brand، أرغب بطلب الآتي:",
+        currency: "ر.ق",
         lang_btn: "English",
         ai_name: "مساعد GEL",
         ai_online: "متصل",
@@ -74,6 +82,14 @@ const translations = {
         shop_subtitle: "Discover our latest exclusive designs",
         add_to_cart: "Add to Cart",
         added: "Added!",
+        size_choose: "Choose your size",
+        size_one: "One size",
+        size_label: "Size",
+        qty_label: "Qty",
+        subtotal_label: "Subtotal",
+        close: "Close",
+        order_greeting: "Hello GEL Brand, I would like to order:",
+        currency: "QAR",
         lang_btn: "العربية",
         ai_name: "GEL Assistant",
         ai_online: "Online",
@@ -182,30 +198,144 @@ function toggleCart() {
     if (sidebar) sidebar.classList.toggle('active');
 }
 
+// Sizes offered per product. Anything not listed gets the standard clothing run.
+const CLOTHING_SIZES = ['S', 'M', 'L', 'XL', 'XXL'];
+const ONE_SIZE = 'ONE SIZE';
+function sizesFor(name) {
+    return /cap/i.test(name) ? [ONE_SIZE] : CLOTHING_SIZES;
+}
+
+function sizeText(size) {
+    return size === ONE_SIZE ? translations[currentLang].size_one : size;
+}
+
+// "Add to cart" on a product opens the size picker; the item goes in once a size is chosen.
 function addToCart(name, price, img, event) {
-    const existingItem = cart.find(item => item.name === name);
-    
+    openSizePicker({ name, price, img }, event ? event.currentTarget : null);
+}
+
+function putInCart(name, price, img, size) {
+    const existingItem = cart.find(item => item.name === name && item.size === size);
     if (existingItem) {
         existingItem.quantity += 1;
     } else {
-        const item = { name, price, img, quantity: 1, id: Date.now() };
-        cart.push(item);
+        cart.push({ name, price, img, size, quantity: 1, id: Date.now() });
     }
-    
     saveCart();
     updateCartUI();
-    
-    // Feedback feedback: turn button green
-    const btn = event ? event.currentTarget : null;
-    if (btn) {
-        const originalText = btn.innerText;
-        btn.innerText = translations[currentLang].added;
-        btn.classList.add('success');
-        setTimeout(() => {
-            btn.innerText = translations[currentLang].add_to_cart;
-            btn.classList.remove('success');
-        }, 300);
+}
+
+const sizePicker = (() => {
+    let overlay, product, selected, returnFocus;
+
+    function build() {
+        overlay = document.createElement('div');
+        overlay.className = 'size-overlay';
+        overlay.innerHTML = `
+            <div class="size-dialog" role="dialog" aria-modal="true" aria-labelledby="size-product-name">
+                <button type="button" class="size-close">&times;</button>
+                <div class="size-product">
+                    <img alt="">
+                    <div>
+                        <h4 id="size-product-name"></h4>
+                        <p class="size-product-price"></p>
+                    </div>
+                </div>
+                <span class="size-label"></span>
+                <div class="size-options"></div>
+                <button type="button" class="size-confirm"></button>
+            </div>`;
+        document.body.appendChild(overlay);
+
+        overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
+        overlay.querySelector('.size-close').addEventListener('click', close);
+        overlay.querySelector('.size-confirm').addEventListener('click', confirm);
+        document.addEventListener('keydown', (e) => {
+            if (!overlay.classList.contains('open')) return;
+            if (e.key === 'Escape') close();
+            if (e.key === 'Tab') trapFocus(e);
+        });
     }
+
+    function trapFocus(e) {
+        const items = [...overlay.querySelectorAll('button:not(:disabled)')];
+        const first = items[0], last = items[items.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+
+    function select(size) {
+        selected = size;
+        overlay.querySelectorAll('.size-option').forEach(btn => {
+            btn.setAttribute('aria-pressed', String(btn.dataset.size === size));
+        });
+        overlay.querySelector('.size-confirm').disabled = false;
+    }
+
+    function open(p, trigger) {
+        if (!overlay) build();
+        const t = translations[currentLang];
+        product = p;
+        selected = null;
+        returnFocus = trigger;
+
+        overlay.querySelector('.size-product img').src = p.img;
+        overlay.querySelector('#size-product-name').textContent = p.name;
+        overlay.querySelector('.size-product-price').textContent = `${p.price} QAR`;
+        overlay.querySelector('.size-label').textContent = t.size_choose;
+        overlay.querySelector('.size-close').setAttribute('aria-label', t.close);
+        const confirmBtn = overlay.querySelector('.size-confirm');
+        confirmBtn.textContent = t.add_to_cart;
+        confirmBtn.disabled = true;
+
+        const options = overlay.querySelector('.size-options');
+        options.innerHTML = '';
+        const sizes = sizesFor(p.name);
+        sizes.forEach(size => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'size-option';
+            btn.dataset.size = size;
+            btn.textContent = sizeText(size);
+            btn.setAttribute('aria-pressed', 'false');
+            btn.addEventListener('click', () => select(size));
+            options.appendChild(btn);
+        });
+        if (sizes.length === 1) select(sizes[0]);
+
+        overlay.classList.add('open');
+        document.body.style.overflow = 'hidden';
+        (sizes.length === 1 ? confirmBtn : options.firstElementChild).focus();
+    }
+
+    function close() {
+        overlay.classList.remove('open');
+        document.body.style.overflow = '';
+        if (returnFocus) returnFocus.focus();
+    }
+
+    function confirm() {
+        if (!selected) return;
+        putInCart(product.name, product.price, product.img, selected);
+        const trigger = returnFocus;
+        close();
+
+        // Brief "Added!" on the product's own button
+        if (trigger) {
+            trigger.textContent = translations[currentLang].added;
+            trigger.classList.add('success');
+            setTimeout(() => {
+                trigger.textContent = translations[currentLang].add_to_cart;
+                trigger.classList.remove('success');
+            }, 1200);
+        }
+    }
+
+    return { open };
+})();
+
+function openSizePicker(product, trigger) {
+    sizePicker.open(product, trigger);
 }
 
 function changeQuantity(id, delta) {
@@ -267,6 +397,7 @@ function updateCartUI() {
                 <img src="${item.img}" alt="${item.name}">
                 <div class="cart-item-info">
                     <h4>${item.name}</h4>
+                    ${item.size ? `<span class="cart-item-size">${translations[currentLang].size_label}: ${sizeText(item.size)}</span>` : ''}
                     <p>${item.price} QAR</p>
                     <div class="qty-controls">
                         <button class="qty-btn" onclick="changeQuantity(${item.id}, 1)">+</button>
@@ -288,12 +419,18 @@ function checkout() {
         return;
     }
     
-    let message = currentLang === 'ar' ? "مرحباً GEL Brand، أرغب بطلب الآتي:\n\n" : "Hello GEL Brand, I would like to order:\n\n";
+    const t = translations[currentLang];
+    let message = t.order_greeting + "\n\n";
     cart.forEach(item => {
-        message += `- ${item.name} | Qty: ${item.quantity} | Total: ${item.price * item.quantity} QAR\n`;
+        const parts = [item.name];
+        if (item.size) parts.push(`${t.size_label}: ${sizeText(item.size)}`);
+        parts.push(`${t.qty_label}: ${item.quantity}`);
+        parts.push(`${t.subtotal_label}: ${item.price * item.quantity} ${t.currency}`);
+        message += `- ${parts.join(' | ')}\n`;
     });
-    message += `\n${translations[currentLang].cart_total}: ${document.getElementById('cart-total').innerText}`;
-    
+    const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    message += `\n${t.cart_total}: ${total} ${t.currency}`;
+
     const whatsappUrl = `https://wa.me/97431121124?text=${encodeURIComponent(message)}`; 
     window.open(whatsappUrl, '_blank');
 }
