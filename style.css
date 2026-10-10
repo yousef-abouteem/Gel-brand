@@ -1074,3 +1074,149 @@ html, body {
 .cart-sidebar:not(.active) {
     box-shadow: none !important;
 }
+
+/* ==========================================
+   Home hero slider
+   Photos cross-fade every few seconds; the text stays put over a soft dark shade.
+   ========================================== */
+.hero-slider {
+    position: relative;
+    height: calc(100vh - 116px); /* fills the screen under the announcement bar and header */
+    min-height: 520px;
+    max-height: 900px;
+    overflow: hidden;
+    background: #e9e9e6;
+    color: #ffffff;
+}
+
+.hero-slides {
+    position: absolute;
+    inset: 0;
+}
+
+.hero-slide {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 35%;
+    opacity: 0;
+    transform: scale(1.06);
+    transition: opacity 1.2s ease, transform 7s ease-out;
+}
+
+.hero-slide.is-active {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.hero-shade {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(20, 28, 22, 0.72) 0%, rgba(20, 28, 22, 0.25) 45%, rgba(20, 28, 22, 0.05) 100%);
+}
+
+.hero-slider-content {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 96px;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 0 24px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.hero-slider-content h1 {
+    font-size: clamp(44px, 7vw, 88px);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: 2px;
+    margin-bottom: 18px;
+    color: #ffffff;
+}
+
+.hero-slider-content p {
+    font-size: clamp(15px, 1.4vw, 18px);
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.88);
+    margin-bottom: 32px;
+}
+
+.hero-slider-btn {
+    display: inline-block;
+    padding: 16px 44px;
+    background: #ffffff;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    border-radius: 2px;
+    transition: background 0.25s ease, color 0.25s ease;
+}
+
+.hero-slider-btn:hover {
+    background: var(--primary-color);
+    color: #ffffff;
+}
+
+.hero-dots {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+}
+
+.hero-dot {
+    width: 28px;
+    height: 3px;
+    padding: 0;
+    border: 0;
+    background: rgba(255, 255, 255, 0.45);
+    cursor: pointer;
+    transition: background 0.3s ease, width 0.3s ease;
+}
+
+.hero-dot.is-active {
+    width: 44px;
+    background: #ffffff;
+}
+
+.hero-dot:focus-visible,
+.hero-slider-btn:focus-visible {
+    outline: 2px solid #ffffff;
+    outline-offset: 4px;
+}
+
+@media (max-width: 860px) {
+    .hero-slider {
+        height: calc(100vh - 98px);
+        min-height: 480px;
+    }
+
+    .hero-slider-content {
+        bottom: 80px;
+    }
+
+    /* Narrow photos are busier behind the text, so darken the lower half a little more */
+    .hero-shade {
+        background: linear-gradient(to top, rgba(20, 28, 22, 0.82) 0%, rgba(20, 28, 22, 0.4) 55%, rgba(20, 28, 22, 0.05) 100%);
+    }
+
+    .hero-dots {
+        bottom: 32px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero-slide {
+        transition: opacity 0.01ms;
+        transform: none;
+    }
+}

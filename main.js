@@ -322,3 +322,50 @@ function checkout() {
         if (window.innerWidth > 860) setOpen(false);
     });
 })();
+
+// --- Home hero: cross-fade between photos every 5 seconds ---
+(function setupHeroSlider() {
+    const slider = document.querySelector('.hero-slider');
+    if (!slider) return;
+
+    const slides = slider.querySelectorAll('.hero-slide');
+    const dots = slider.querySelectorAll('.hero-dot');
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let current = 0;
+    let timer = null;
+
+    function show(index) {
+        slides[current].classList.remove('is-active');
+        dots[current].classList.remove('is-active');
+        dots[current].removeAttribute('aria-current');
+        current = (index + slides.length) % slides.length;
+        slides[current].classList.add('is-active');
+        dots[current].classList.add('is-active');
+        dots[current].setAttribute('aria-current', 'true');
+    }
+
+    function start() {
+        if (reduceMotion || timer) return;
+        timer = setInterval(() => show(current + 1), 5000);
+    }
+
+    function stop() {
+        clearInterval(timer);
+        timer = null;
+    }
+
+    dots.forEach((dot, i) => {
+        dot.addEventListener('click', () => {
+            show(i);
+            stop();
+            start(); // restart the countdown after a manual choice
+        });
+    });
+
+    // Pause while the visitor hovers or the tab is in the background
+    slider.addEventListener('mouseenter', stop);
+    slider.addEventListener('mouseleave', start);
+    document.addEventListener('visibilitychange', () => (document.hidden ? stop() : start()));
+
+    start();
+})();

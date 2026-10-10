@@ -60,15 +60,25 @@
         </div>
     </div>
 
-<!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content">
+<!-- Hero: full-width photos that change every few seconds -->
+    <section class="hero-slider" aria-label="GEL">
+        <div class="hero-slides">
+            <img class="hero-slide is-active" src="IMG/IMG_4258.JPG" alt="">
+            <img class="hero-slide" src="IMG/IMG_4255.JPG" alt="">
+            <img class="hero-slide" src="IMG/IMG_4254.JPG" alt="">
+        </div>
+        <div class="hero-shade"></div>
+
+        <div class="hero-slider-content">
             <h1>GEL BRAND</h1>
             <p data-i18n="hero_desc">نحن لا نبيع الملابس فقط، نحن نصنع أسلوب حياة يجمع بين الفخامة والراحة العصرية. اكتشف مجموعتنا المختارة بعناية لتناسب ذوقك الرفيع.</p>
-            <a href="shop.html" class="hero-btn" data-i18n="hero_btn">تصفح المنتجات</a>
+            <a href="shop.html" class="hero-slider-btn" data-i18n="hero_btn">تصفح المنتجات</a>
         </div>
-        <div class="hero-logo">
-            <img src="IMG/Logo.PNG" alt="GEL Owl Logo">
+
+        <div class="hero-dots" role="group" aria-label="Slides">
+            <button type="button" class="hero-dot is-active" aria-label="1" aria-current="true"></button>
+            <button type="button" class="hero-dot" aria-label="2"></button>
+            <button type="button" class="hero-dot" aria-label="3"></button>
         </div>
     </section>
 
