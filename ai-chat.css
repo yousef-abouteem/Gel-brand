@@ -260,3 +260,8 @@ body:has(.cart-sidebar.active) .ai-chat-widget {
     text-decoration: underline;
     text-underline-offset: 3px;
 }
+
+/* Keep phone numbers on one line */
+.ai-message bdi {
+    white-space: nowrap;
+}
