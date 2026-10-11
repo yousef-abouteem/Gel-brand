@@ -252,3 +252,16 @@ body:has(.cart-sidebar.active) .ai-chat-widget {
     opacity: 0;
     pointer-events: none;
 }
+
+/* Product links inside assistant replies */
+.ai-message .ai-link {
+    color: inherit;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+/* Keep phone numbers on one line */
+.ai-message bdi {
+    white-space: nowrap;
+}

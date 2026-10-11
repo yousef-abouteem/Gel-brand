@@ -81,3 +81,8 @@ function findProductByImage(src) {
     const file = src.split('/').pop();
     return GEL_PRODUCTS.find(p => p.images[0].split('/').pop() === file);
 }
+
+// Also used by the chat server function (api/chat.js) so the assistant always knows the current list
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { GEL_PRODUCTS };
+}
