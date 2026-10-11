@@ -41,6 +41,9 @@ function appendMessage(text, sender) {
     msgDiv.classList.add('message', `${sender}-message`);
     const formattedText = escapeHTML(text)
         .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        // [name](product.html?id=tee) links, only to pages on this site
+        .replace(/\[([^\]]{1,80})\]\(((?:product\.html\?id=[a-z]+)|shop\.html|contact\.html)\)/g,
+            '<a href="$2" class="ai-link">$1</a>')
         .replace(/\n/g, '<br>')
         // الأرقام مثل +974 3112 1124 تُعرض دائمًا من اليسار لليمين حتى لا تنقلب داخل النص العربي
         .replace(/\+?\d[\d ]{6,}\d/g, '<bdi dir="ltr">$&</bdi>');
